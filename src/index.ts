@@ -8,28 +8,46 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from '@grpc/proto-loader';
 import { ensureUser } from "./utils";
 
-import { ProtoGrpcType } from '../proto/greeter';
+import { ProtoGrpcType as GrpcTestType } from '../proto/grpcTest';
 import { authServiceProto, authHandlers } from './services/authService';
-import { GreeterHandlers } from '../proto/greeterTest/Greeter';
-import { HelloRequest } from '../proto/greeterTest/HelloRequest';
-import { HelloReply } from '../proto/greeterTest/HelloReply';
+import { GrpcTestHandlers } from '../proto/grpcTest/GrpcTest';
+import { Request } from '../proto/grpcTest/Request';
+import { Reply } from '../proto/grpcTest/Reply';
 
-const greeterServer: GreeterHandlers = {
-    async SayHello(
-        call: grpc.ServerUnaryCall<HelloRequest, HelloReply>,
-        callback: grpc.sendUnaryData<HelloReply>
+const testServer: GrpcTestHandlers = {
+    async TestNoAuth(
+        call: grpc.ServerUnaryCall<Request, Reply>,
+        callback: grpc.sendUnaryData<Reply>
+    ) {
+        console.info('TestNoAuth called');
+        callback(null, { message: `You sent: ${call.request.arg}` });
+    },
+
+    async TestAuth(
+        call: grpc.ServerUnaryCall<Request, Reply>,
+        callback: grpc.sendUnaryData<Reply>
     ) {
         const user = await ensureUser(call, callback);
-        callback(null, { message: `Hello there, ${call.request.name}.\nYou're logged in as: ${user.firstName} ${user.lastName}` });
+        console.info('TestAuth called with creds:', user);
+        callback(null, { message: `You sent: ${call.request.arg}`});
+    },
+
+    async TestAuthAdmin(
+        call: grpc.ServerUnaryCall<Request, Reply>,
+        callback: grpc.sendUnaryData<Reply>
+    ) {
+        const user = await ensureUser(call, callback, true);
+        console.info('TestAuthAdmin called with creds:', user);
+        callback(null, { message: `You sent: ${call.request.arg}`});
     }
 }
 
 function createServer() {
-    const packageDef = protoLoader.loadSync(__dirname + '/../proto/greeter.proto');
-    const proto = (grpc.loadPackageDefinition(packageDef) as unknown) as ProtoGrpcType
+    const packageDef = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
+    const proto = (grpc.loadPackageDefinition(packageDef) as unknown) as GrpcTestType
     const server = new grpc.Server();
 
-    server.addService(proto.greeterTest.Greeter.service, greeterServer);
+    server.addService(proto.grpcTest.GrpcTest.service, testServer);
     server.addService(authServiceProto.authService.AuthService.service, authHandlers);
 
     return server;

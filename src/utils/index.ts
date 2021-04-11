@@ -31,10 +31,24 @@ export async function ensureUser(call: any, callback: Function, adminRequired?: 
             }
             const student = await manager.findOne(Student, { where: { account: { id: (decoded as any).userId } } });
             if (student) {
-                return student;
+                if (adminRequired) {
+                    callback({
+                        code: grpc.status.PERMISSION_DENIED,
+                        message: "Not authorized"
+                    });
+                } else {
+                    return student;
+                }
             } else {
                 const teacher = await manager.findOne(Teacher, { where: { account: { id: (decoded as any).userId } } });
-                return teacher;
+                if (adminRequired && !teacher.admin) {
+                    callback({
+                        code: grpc.status.PERMISSION_DENIED,
+                        message: "Not authorized"
+                    });
+                } else {
+                    return teacher;
+                }
             }
         }
     }

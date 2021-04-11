@@ -2,9 +2,10 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import * as fs from "fs";
 import { ProtoGrpcType as AuthServiceType } from '../proto/authService';
-import { ProtoGrpcType as GreeterServiceType } from '../proto/greeter';
+import { ProtoGrpcType as GrpcTestType } from '../proto/grpcTest';
 
 if (process.argv.length > 2) {
+    const action = process.argv[2];
     const creds = {} as { token: string, userId: number };
     try {
         const content = JSON.parse(fs.readFileSync(__dirname + "/creds.txt").toString());
@@ -21,7 +22,7 @@ if (process.argv.length > 2) {
     if (creds.token) {
         metadata.add('authorization', creds.token);
     }
-    switch(process.argv[2]) {
+    switch(action) {
         case "login":
             if (process.argv.length < 5) {
                 console.error("Too few arguments");
@@ -46,25 +47,34 @@ if (process.argv.length > 2) {
             });
             break;
 
-        case "greet":
+        case "echo1":
+        case "echo2":
+        case "echo3":
             if (process.argv.length < 4) {
                 console.error("Too few arguments");
-                console.info("Usage: yarn run client greet <name>");
+                console.info("Usage: yarn run client echoX <name>");
                 process.exit(1);
             }
-            const name = process.argv[3];
+            const arg = process.argv[3];
 
-            const greetPkg = protoLoader.loadSync(__dirname + '/../proto/greeter.proto');
-            const greetProto = (grpc.loadPackageDefinition(greetPkg) as unknown) as GreeterServiceType;
-            const greetClient = new greetProto.greeterTest.Greeter('localhost:50051', grpc.credentials.createInsecure());
+            const testPkg = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
+            const testProto = (grpc.loadPackageDefinition(testPkg) as unknown) as GrpcTestType;
+            const testClient = new testProto.grpcTest.GrpcTest('localhost:50051', grpc.credentials.createInsecure());
 
-            greetClient.SayHello({ name }, metadata, (err, res) => {
+            function cb(err, res) {
                 if (err) {
                     console.error(err);
                 } else {
                     console.log(res.message);
                 }
-            })
+            }
+            if (action === "echo1") {
+                testClient.TestNoAuth({ arg }, metadata, cb);
+            } else if (action === "echo2") {
+                testClient.TestAuth({ arg }, metadata, cb);
+            } else {
+                testClient.TestAuthAdmin({ arg}, metadata, cb);
+            }
             break;
 
         default:
