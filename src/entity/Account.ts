@@ -1,6 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, Unique } from "typeorm";
+import { AccessToken } from "./AccessToken";
 
 @Entity()
+@Unique(["email"])
 export class Account extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,4 +12,7 @@ export class Account extends BaseEntity {
 
     @Column()
     password: string;
+
+    @OneToMany(() => AccessToken, (token) => token.account)
+    tokens: AccessToken[];
 }

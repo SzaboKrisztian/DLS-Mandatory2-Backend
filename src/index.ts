@@ -1,23 +1,26 @@
 import "reflect-metadata";
+
+require('dotenv').config();
+
 import { createConnection } from "typeorm";
 import { Student } from "./entity/Student";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from '@grpc/proto-loader';
+import { ensureUser } from "./utils";
 
 import { ProtoGrpcType } from '../proto/greeter';
+import { authServiceProto, authHandlers } from './services/authService';
 import { GreeterHandlers } from '../proto/greeterTest/Greeter';
 import { HelloRequest } from '../proto/greeterTest/HelloRequest';
 import { HelloReply } from '../proto/greeterTest/HelloReply';
 
 const greeterServer: GreeterHandlers = {
-    SayHello(
+    async SayHello(
         call: grpc.ServerUnaryCall<HelloRequest, HelloReply>,
         callback: grpc.sendUnaryData<HelloReply>
     ) {
-        if (call.request) {
-            console.log(`Got client message containing name: ${call.request.name}`);
-        }
-        callback(null, { message: `Hello there, ${call.request.name}` });
+        const user = await ensureUser(call, callback);
+        callback(null, { message: `Hello there, ${call.request.name}.\nYou're logged in as: ${user.firstName} ${user.lastName}` });
     }
 }
 
@@ -27,6 +30,8 @@ function createServer() {
     const server = new grpc.Server();
 
     server.addService(proto.greeterTest.Greeter.service, greeterServer);
+    server.addService(authServiceProto.authService.AuthService.service, authHandlers);
+
     return server;
 }
 
