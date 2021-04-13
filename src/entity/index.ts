@@ -2,6 +2,7 @@ import { AccessToken } from "./AccessToken";
 import { Account } from "./Account";
 import { Code } from "./Code";
 import { Course } from "./Course";
+import { Presence } from "./Presence";
 import { RollCall } from "./RollCall";
 import { Student } from "./Student";
 import { Teacher } from "./Teacher";
@@ -11,6 +12,7 @@ export {
     Account,
     Code,
     Course,
+    Presence,
     RollCall,
     Student,
     Teacher,

@@ -6,10 +6,10 @@ import {
     BaseEntity,
     JoinTable,
     ManyToOne,
+    CreateDateColumn,
+    UpdateDateColumn
 } from "typeorm";
-import { RollCall } from "./RollCall";
-import { Student } from "./Student";
-import { Teacher } from "./Teacher";
+import { RollCall, Student, Teacher } from "./";
 
 @Entity()
 export class Course extends BaseEntity {
@@ -29,4 +29,10 @@ export class Course extends BaseEntity {
 
     @ManyToOne(() => RollCall, { nullable: true })
     rollCalls: RollCall[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

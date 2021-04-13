@@ -1,6 +1,10 @@
 import "reflect-metadata";
 
-require('dotenv').config();
+const envVars = require('dotenv').config();
+
+if (envVars.error) {
+    throw envVars.error;
+}
 
 import { createConnection } from "typeorm";
 import { Student } from "./entity/Student";
@@ -8,8 +12,8 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from '@grpc/proto-loader';
 import { ensureUser } from "./utils";
 
-import { ProtoGrpcType as GrpcTestType } from '../proto/grpcTest';
 import { authServiceProto, authHandlers } from './services/authService';
+import { ProtoGrpcType as GrpcTestType } from '../proto/grpcTest';
 import { GrpcTestHandlers } from '../proto/grpcTest/GrpcTest';
 import { Request } from '../proto/grpcTest/Request';
 import { Reply } from '../proto/grpcTest/Reply';
@@ -28,6 +32,7 @@ const testServer: GrpcTestHandlers = {
         callback: grpc.sendUnaryData<Reply>
     ) {
         const user = await ensureUser(call, callback);
+        if (!user) return;
         console.info('TestAuth called with creds:', user);
         callback(null, { message: `You sent: ${call.request.arg}`});
     },
@@ -37,6 +42,7 @@ const testServer: GrpcTestHandlers = {
         callback: grpc.sendUnaryData<Reply>
     ) {
         const user = await ensureUser(call, callback, true);
+        if (!user) return;
         console.info('TestAuthAdmin called with creds:', user);
         callback(null, { message: `You sent: ${call.request.arg}`});
     }
@@ -44,7 +50,7 @@ const testServer: GrpcTestHandlers = {
 
 function createServer() {
     const packageDef = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
-    const proto = (grpc.loadPackageDefinition(packageDef) as unknown) as GrpcTestType
+    const proto = (grpc.loadPackageDefinition(packageDef) as unknown) as GrpcTestType;
     const server = new grpc.Server();
 
     server.addService(proto.grpcTest.GrpcTest.service, testServer);

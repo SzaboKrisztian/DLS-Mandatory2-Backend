@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package rollCallService;
+
+service RollCall {
+    // Teacher procedures
+    rpc StartRollCall(StartRollCallReq) returns (stream Code);
+    rpc EndRollCall(EndRollCallReq) returns (EndRollCallRes);
+
+    // Student procedures
+    rpc ValidateCode(Code) returns (ValidateRes);
+    rpc GetMyPresences(GetMyPresencesReq) returns (GetMyPresencesRes);
+}
+
+message StartRollCallReq {
+    int32 courseId = 1;
+    string periodStart = 2;
+    string periodEnd = 3;
+}
+
+message Code {
+    int32 rollCallId = 1;
+    string code = 2;
+}
+
+message EndRollCallReq {
+    int32 rollCallId = 1;
+}
+
+message EndRollCallRes {
+    bool success = 1;
+    optional string error = 2;
+}
+
+message ValidateRes {
+    bool valid = 1;
+    bool markedAsPresent = 2;
+}
+
+message GetMyPresencesReq {
+    optional string startDate = 1;
+    optional string endDate = 2;
+}
+
+message GetMyPresencesRes {
+    repeated Presence presences = 1;
+}
+
+message Presence {
+    int32 id = 1;
+    int32 rollCallId = 2;
+    string timestamp = 4;
+}

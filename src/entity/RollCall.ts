@@ -4,10 +4,11 @@ import {
     PrimaryGeneratedColumn,
     BaseEntity,
     OneToMany,
-    ManyToOne
+    ManyToOne,
+    CreateDateColumn,
+    UpdateDateColumn
 } from "typeorm";
-import { Code } from "./Code";
-import { Course } from "./Course";
+import { Code, Course, Presence } from "./";
 
 @Entity()
 export class RollCall extends BaseEntity {
@@ -20,9 +21,21 @@ export class RollCall extends BaseEntity {
     @Column()
     periodEnd: Date;
 
+    @Column({ nullable: true, default: null })
+    timeStopped: Date;
+
     @OneToMany(() => Course, (course) => course.rollCalls)
     course: Course;
 
-    @ManyToOne(() => Code, (code) => code.rollCall)
+    @ManyToOne(() => Code, (code) => code.rollCall, { nullable: true })
     codes: Code[];
+
+    @ManyToOne(() => Presence, (presence) => presence.rollCall, { nullable: true })
+    presences: Presence[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

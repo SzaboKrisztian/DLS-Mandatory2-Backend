@@ -1,5 +1,13 @@
-import { Entity, Column, PrimaryColumn, BaseEntity, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Account } from './Account';
+import {
+    Entity,
+    Column,
+    PrimaryColumn,
+    BaseEntity,
+    ManyToOne,
+    CreateDateColumn,
+    UpdateDateColumn
+} from 'typeorm';
+import { Account } from './';
 
 @Entity()
 export class AccessToken extends BaseEntity {
@@ -14,4 +22,7 @@ export class AccessToken extends BaseEntity {
 
     @CreateDateColumn()
     createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

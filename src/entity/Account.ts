@@ -1,5 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany, Unique } from "typeorm";
-import { AccessToken } from "./AccessToken";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    BaseEntity,
+    OneToMany,
+    Unique,
+    CreateDateColumn,
+    UpdateDateColumn
+} from "typeorm";
+import { AccessToken } from "./";
 
 @Entity()
 @Unique(["email"])
@@ -15,4 +24,10 @@ export class Account extends BaseEntity {
 
     @OneToMany(() => AccessToken, (token) => token.account)
     tokens: AccessToken[];
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

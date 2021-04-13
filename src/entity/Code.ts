@@ -1,8 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne } from 'typeorm';
-import { RollCall } from './RollCall';
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    BaseEntity,
+    ManyToOne,
+    CreateDateColumn
+}
+from 'typeorm';
+import { RollCall } from './';
 
-@Entity()
-export class Code extends BaseEntity {
+@Entity() export class Code extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -11,4 +18,7 @@ export class Code extends BaseEntity {
 
     @ManyToOne(() => RollCall)
     rollCall: RollCall;
+
+    @CreateDateColumn()
+    createdAt: Date;
 }

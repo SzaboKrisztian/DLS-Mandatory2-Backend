@@ -34,7 +34,10 @@ if (process.argv.length > 2) {
 
             const loginPkg = protoLoader.loadSync(__dirname + '/../proto/authService.proto');
             const loginProto = (grpc.loadPackageDefinition(loginPkg) as unknown) as AuthServiceType;
-            const loginClient = new loginProto.authService.AuthService('localhost:50051', grpc.credentials.createInsecure());
+            const loginClient = new loginProto.authService.AuthService(
+                'localhost:50051',
+                grpc.credentials.createInsecure()
+            );
 
             loginClient.Login({ email, password }, (err, res) => {
                 if (err) {
@@ -59,7 +62,10 @@ if (process.argv.length > 2) {
 
             const testPkg = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
             const testProto = (grpc.loadPackageDefinition(testPkg) as unknown) as GrpcTestType;
-            const testClient = new testProto.grpcTest.GrpcTest('localhost:50051', grpc.credentials.createInsecure());
+            const testClient = new testProto.grpcTest.GrpcTest(
+                'localhost:50051', 
+                grpc.credentials.createInsecure()
+            );
 
             function cb(err, res) {
                 if (err) {
