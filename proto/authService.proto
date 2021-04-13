@@ -12,6 +12,6 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    string token = 2;
-    int32 userId = 3;
+    string token = 1;
+    int32 userId = 2;
 }

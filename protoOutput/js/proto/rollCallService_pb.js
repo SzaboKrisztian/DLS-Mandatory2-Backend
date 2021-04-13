@@ -1322,7 +1322,7 @@ proto.rollCallService.Presence.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
     rollcallid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    timestamp: jspb.Message.getFieldWithDefault(msg, 4, "")
+    timestamp: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
   if (includeInstance) {
@@ -1367,7 +1367,7 @@ proto.rollCallService.Presence.deserializeBinaryFromReader = function(msg, reade
       var value = /** @type {number} */ (reader.readInt32());
       msg.setRollcallid(value);
       break;
-    case 4:
+    case 3:
       var value = /** @type {string} */ (reader.readString());
       msg.setTimestamp(value);
       break;
@@ -1417,7 +1417,7 @@ proto.rollCallService.Presence.serializeBinaryToWriter = function(message, write
   f = message.getTimestamp();
   if (f.length > 0) {
     writer.writeString(
-      4,
+      3,
       f
     );
   }
@@ -1461,11 +1461,11 @@ proto.rollCallService.Presence.prototype.setRollcallid = function(value) {
 
 
 /**
- * optional string timestamp = 4;
+ * optional string timestamp = 3;
  * @return {string}
  */
 proto.rollCallService.Presence.prototype.getTimestamp = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
 };
 
 
@@ -1474,7 +1474,7 @@ proto.rollCallService.Presence.prototype.getTimestamp = function() {
  * @return {!proto.rollCallService.Presence} returns this
  */
 proto.rollCallService.Presence.prototype.setTimestamp = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 

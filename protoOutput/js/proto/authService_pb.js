@@ -251,8 +251,8 @@ proto.authService.LoginResponse.prototype.toObject = function(opt_includeInstanc
  */
 proto.authService.LoginResponse.toObject = function(includeInstance, msg) {
   var f, obj = {
-    token: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    userid: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    token: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    userid: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -289,11 +289,11 @@ proto.authService.LoginResponse.deserializeBinaryFromReader = function(msg, read
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 2:
+    case 1:
       var value = /** @type {string} */ (reader.readString());
       msg.setToken(value);
       break;
-    case 3:
+    case 2:
       var value = /** @type {number} */ (reader.readInt32());
       msg.setUserid(value);
       break;
@@ -329,14 +329,14 @@ proto.authService.LoginResponse.serializeBinaryToWriter = function(message, writ
   f = message.getToken();
   if (f.length > 0) {
     writer.writeString(
-      2,
+      1,
       f
     );
   }
   f = message.getUserid();
   if (f !== 0) {
     writer.writeInt32(
-      3,
+      2,
       f
     );
   }
@@ -344,11 +344,11 @@ proto.authService.LoginResponse.serializeBinaryToWriter = function(message, writ
 
 
 /**
- * optional string token = 2;
+ * optional string token = 1;
  * @return {string}
  */
 proto.authService.LoginResponse.prototype.getToken = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, ""));
 };
 
 
@@ -357,16 +357,16 @@ proto.authService.LoginResponse.prototype.getToken = function() {
  * @return {!proto.authService.LoginResponse} returns this
  */
 proto.authService.LoginResponse.prototype.setToken = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
 /**
- * optional int32 userId = 3;
+ * optional int32 userId = 2;
  * @return {number}
  */
 proto.authService.LoginResponse.prototype.getUserid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
@@ -375,7 +375,7 @@ proto.authService.LoginResponse.prototype.getUserid = function() {
  * @return {!proto.authService.LoginResponse} returns this
  */
 proto.authService.LoginResponse.prototype.setUserid = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
