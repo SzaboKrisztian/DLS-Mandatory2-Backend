@@ -1,8 +1,38 @@
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import * as fs from "fs";
-import { ProtoGrpcType as AuthServiceType } from '../proto/authService';
-import { ProtoGrpcType as GrpcTestType } from '../proto/grpcTest';
+import { ProtoGrpcType as AuthServiceType } from '../protoOutput/ts/authService';
+import { ProtoGrpcType as GrpcTestType } from '../protoOutput/ts/grpcTest';
+import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCallService";
+
+const SERVER_HOST = "localhost:50051";
+
+function getTestClient() {
+    const testPkg = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
+    const testProto = (grpc.loadPackageDefinition(testPkg) as unknown) as GrpcTestType;
+    return new testProto.grpcTest.GrpcTest(
+        SERVER_HOST, 
+        grpc.credentials.createInsecure()
+    );
+}
+
+function getAuthClient() {
+    const authPkg = protoLoader.loadSync(__dirname + '/../proto/authService.proto');
+    const authProto = (grpc.loadPackageDefinition(authPkg) as unknown) as AuthServiceType;
+    return new authProto.authService.AuthService(
+        SERVER_HOST,
+        grpc.credentials.createInsecure()
+    );
+}
+
+function getRollCallClient() {
+    const rollCallPkg = protoLoader.loadSync(__dirname + '/../proto/rollCallService.proto');
+    const rollCallProto = (grpc.loadPackageDefinition(rollCallPkg) as unknown) as RollCallServiceType;
+    return new rollCallProto.rollCallService.RollCallService(
+        SERVER_HOST, 
+        grpc.credentials.createInsecure()
+    );
+}
 
 if (process.argv.length > 2) {
     const action = process.argv[2];
@@ -32,12 +62,7 @@ if (process.argv.length > 2) {
             const email = process.argv[3];
             const password = process.argv[4];
 
-            const loginPkg = protoLoader.loadSync(__dirname + '/../proto/authService.proto');
-            const loginProto = (grpc.loadPackageDefinition(loginPkg) as unknown) as AuthServiceType;
-            const loginClient = new loginProto.authService.AuthService(
-                'localhost:50051',
-                grpc.credentials.createInsecure()
-            );
+            const loginClient = getAuthClient();
 
             loginClient.Login({ email, password }, (err, res) => {
                 if (err) {
@@ -60,12 +85,7 @@ if (process.argv.length > 2) {
             }
             const arg = process.argv[3];
 
-            const testPkg = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
-            const testProto = (grpc.loadPackageDefinition(testPkg) as unknown) as GrpcTestType;
-            const testClient = new testProto.grpcTest.GrpcTest(
-                'localhost:50051', 
-                grpc.credentials.createInsecure()
-            );
+            const testClient = getTestClient();
 
             function cb(err, res) {
                 if (err) {
@@ -83,6 +103,52 @@ if (process.argv.length > 2) {
             }
             break;
 
+        case "startRollCall":
+            const courseId = parseInt(process.argv[3], 10);
+            if (Number.isNaN(courseId)) {
+                console.error("Invalid courseId");
+                process.exit(1);
+            }
+        
+            const rollCallClient = getRollCallClient();
+
+            const start = new Date();
+            const end = new Date();
+            end.setHours(end.getHours() + 1);
+
+            const call = rollCallClient.startRollCall({
+                courseId,
+                periodStart: start.toISOString(),
+                periodEnd: end.toISOString()
+            }, metadata);
+
+            call.on('data', function(code) {
+                console.log(code);
+            });
+            call.on('error', function(error) {
+                console.log(error);
+            });
+            call.on('end', function() {
+                console.log("Stream ended");
+            })
+            break;
+
+        case "endRollCall":
+            const rollCallId = parseInt(process.argv[3], 10);
+            if (Number.isNaN(rollCallId)) {
+                console.error("Invalid roll call id");
+                process.exit(1);
+            }
+
+            const rcClient = getRollCallClient();
+            rcClient.EndRollCall({ rollCallId }, metadata, (err, res) => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    console.log("Roll call successfully stopped.");
+                }
+            })
+            break;
         default:
             console.error("Invalid action");
     }

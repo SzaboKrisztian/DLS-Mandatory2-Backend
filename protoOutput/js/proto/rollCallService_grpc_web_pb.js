@@ -26,7 +26,7 @@ proto.rollCallService = require('./rollCallService_pb.js');
  * @struct
  * @final
  */
-proto.rollCallService.RollCallClient =
+proto.rollCallService.RollCallServiceClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options['format'] = 'binary';
@@ -52,7 +52,7 @@ proto.rollCallService.RollCallClient =
  * @struct
  * @final
  */
-proto.rollCallService.RollCallPromiseClient =
+proto.rollCallService.RollCallServicePromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
   options['format'] = 'binary';
@@ -76,8 +76,8 @@ proto.rollCallService.RollCallPromiseClient =
  *   !proto.rollCallService.StartRollCallReq,
  *   !proto.rollCallService.Code>}
  */
-const methodDescriptor_RollCall_StartRollCall = new grpc.web.MethodDescriptor(
-  '/rollCallService.RollCall/StartRollCall',
+const methodDescriptor_RollCallService_StartRollCall = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/StartRollCall',
   grpc.web.MethodType.SERVER_STREAMING,
   proto.rollCallService.StartRollCallReq,
   proto.rollCallService.Code,
@@ -98,7 +98,7 @@ const methodDescriptor_RollCall_StartRollCall = new grpc.web.MethodDescriptor(
  *   !proto.rollCallService.StartRollCallReq,
  *   !proto.rollCallService.Code>}
  */
-const methodInfo_RollCall_StartRollCall = new grpc.web.AbstractClientBase.MethodInfo(
+const methodInfo_RollCallService_StartRollCall = new grpc.web.AbstractClientBase.MethodInfo(
   proto.rollCallService.Code,
   /**
    * @param {!proto.rollCallService.StartRollCallReq} request
@@ -118,13 +118,13 @@ const methodInfo_RollCall_StartRollCall = new grpc.web.AbstractClientBase.Method
  * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.Code>}
  *     The XHR Node Readable Stream
  */
-proto.rollCallService.RollCallClient.prototype.startRollCall =
+proto.rollCallService.RollCallServiceClient.prototype.startRollCall =
     function(request, metadata) {
   return this.client_.serverStreaming(this.hostname_ +
-      '/rollCallService.RollCall/StartRollCall',
+      '/rollCallService.RollCallService/StartRollCall',
       request,
       metadata || {},
-      methodDescriptor_RollCall_StartRollCall);
+      methodDescriptor_RollCallService_StartRollCall);
 };
 
 
@@ -135,13 +135,13 @@ proto.rollCallService.RollCallClient.prototype.startRollCall =
  * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.Code>}
  *     The XHR Node Readable Stream
  */
-proto.rollCallService.RollCallPromiseClient.prototype.startRollCall =
+proto.rollCallService.RollCallServicePromiseClient.prototype.startRollCall =
     function(request, metadata) {
   return this.client_.serverStreaming(this.hostname_ +
-      '/rollCallService.RollCall/StartRollCall',
+      '/rollCallService.RollCallService/StartRollCall',
       request,
       metadata || {},
-      methodDescriptor_RollCall_StartRollCall);
+      methodDescriptor_RollCallService_StartRollCall);
 };
 
 
@@ -151,8 +151,8 @@ proto.rollCallService.RollCallPromiseClient.prototype.startRollCall =
  *   !proto.rollCallService.EndRollCallReq,
  *   !proto.rollCallService.EndRollCallRes>}
  */
-const methodDescriptor_RollCall_EndRollCall = new grpc.web.MethodDescriptor(
-  '/rollCallService.RollCall/EndRollCall',
+const methodDescriptor_RollCallService_EndRollCall = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/EndRollCall',
   grpc.web.MethodType.UNARY,
   proto.rollCallService.EndRollCallReq,
   proto.rollCallService.EndRollCallRes,
@@ -173,7 +173,7 @@ const methodDescriptor_RollCall_EndRollCall = new grpc.web.MethodDescriptor(
  *   !proto.rollCallService.EndRollCallReq,
  *   !proto.rollCallService.EndRollCallRes>}
  */
-const methodInfo_RollCall_EndRollCall = new grpc.web.AbstractClientBase.MethodInfo(
+const methodInfo_RollCallService_EndRollCall = new grpc.web.AbstractClientBase.MethodInfo(
   proto.rollCallService.EndRollCallRes,
   /**
    * @param {!proto.rollCallService.EndRollCallReq} request
@@ -196,13 +196,13 @@ const methodInfo_RollCall_EndRollCall = new grpc.web.AbstractClientBase.MethodIn
  * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.EndRollCallRes>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.rollCallService.RollCallClient.prototype.endRollCall =
+proto.rollCallService.RollCallServiceClient.prototype.endRollCall =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/rollCallService.RollCall/EndRollCall',
+      '/rollCallService.RollCallService/EndRollCall',
       request,
       metadata || {},
-      methodDescriptor_RollCall_EndRollCall,
+      methodDescriptor_RollCallService_EndRollCall,
       callback);
 };
 
@@ -215,13 +215,13 @@ proto.rollCallService.RollCallClient.prototype.endRollCall =
  * @return {!Promise<!proto.rollCallService.EndRollCallRes>}
  *     Promise that resolves to the response
  */
-proto.rollCallService.RollCallPromiseClient.prototype.endRollCall =
+proto.rollCallService.RollCallServicePromiseClient.prototype.endRollCall =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/rollCallService.RollCall/EndRollCall',
+      '/rollCallService.RollCallService/EndRollCall',
       request,
       metadata || {},
-      methodDescriptor_RollCall_EndRollCall);
+      methodDescriptor_RollCallService_EndRollCall);
 };
 
 
@@ -231,8 +231,8 @@ proto.rollCallService.RollCallPromiseClient.prototype.endRollCall =
  *   !proto.rollCallService.Code,
  *   !proto.rollCallService.ValidateRes>}
  */
-const methodDescriptor_RollCall_ValidateCode = new grpc.web.MethodDescriptor(
-  '/rollCallService.RollCall/ValidateCode',
+const methodDescriptor_RollCallService_ValidateCode = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/ValidateCode',
   grpc.web.MethodType.UNARY,
   proto.rollCallService.Code,
   proto.rollCallService.ValidateRes,
@@ -253,7 +253,7 @@ const methodDescriptor_RollCall_ValidateCode = new grpc.web.MethodDescriptor(
  *   !proto.rollCallService.Code,
  *   !proto.rollCallService.ValidateRes>}
  */
-const methodInfo_RollCall_ValidateCode = new grpc.web.AbstractClientBase.MethodInfo(
+const methodInfo_RollCallService_ValidateCode = new grpc.web.AbstractClientBase.MethodInfo(
   proto.rollCallService.ValidateRes,
   /**
    * @param {!proto.rollCallService.Code} request
@@ -276,13 +276,13 @@ const methodInfo_RollCall_ValidateCode = new grpc.web.AbstractClientBase.MethodI
  * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.ValidateRes>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.rollCallService.RollCallClient.prototype.validateCode =
+proto.rollCallService.RollCallServiceClient.prototype.validateCode =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/rollCallService.RollCall/ValidateCode',
+      '/rollCallService.RollCallService/ValidateCode',
       request,
       metadata || {},
-      methodDescriptor_RollCall_ValidateCode,
+      methodDescriptor_RollCallService_ValidateCode,
       callback);
 };
 
@@ -295,13 +295,13 @@ proto.rollCallService.RollCallClient.prototype.validateCode =
  * @return {!Promise<!proto.rollCallService.ValidateRes>}
  *     Promise that resolves to the response
  */
-proto.rollCallService.RollCallPromiseClient.prototype.validateCode =
+proto.rollCallService.RollCallServicePromiseClient.prototype.validateCode =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/rollCallService.RollCall/ValidateCode',
+      '/rollCallService.RollCallService/ValidateCode',
       request,
       metadata || {},
-      methodDescriptor_RollCall_ValidateCode);
+      methodDescriptor_RollCallService_ValidateCode);
 };
 
 
@@ -311,8 +311,8 @@ proto.rollCallService.RollCallPromiseClient.prototype.validateCode =
  *   !proto.rollCallService.GetMyPresencesReq,
  *   !proto.rollCallService.GetMyPresencesRes>}
  */
-const methodDescriptor_RollCall_GetMyPresences = new grpc.web.MethodDescriptor(
-  '/rollCallService.RollCall/GetMyPresences',
+const methodDescriptor_RollCallService_GetMyPresences = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/GetMyPresences',
   grpc.web.MethodType.UNARY,
   proto.rollCallService.GetMyPresencesReq,
   proto.rollCallService.GetMyPresencesRes,
@@ -333,7 +333,7 @@ const methodDescriptor_RollCall_GetMyPresences = new grpc.web.MethodDescriptor(
  *   !proto.rollCallService.GetMyPresencesReq,
  *   !proto.rollCallService.GetMyPresencesRes>}
  */
-const methodInfo_RollCall_GetMyPresences = new grpc.web.AbstractClientBase.MethodInfo(
+const methodInfo_RollCallService_GetMyPresences = new grpc.web.AbstractClientBase.MethodInfo(
   proto.rollCallService.GetMyPresencesRes,
   /**
    * @param {!proto.rollCallService.GetMyPresencesReq} request
@@ -356,13 +356,13 @@ const methodInfo_RollCall_GetMyPresences = new grpc.web.AbstractClientBase.Metho
  * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.GetMyPresencesRes>|undefined}
  *     The XHR Node Readable Stream
  */
-proto.rollCallService.RollCallClient.prototype.getMyPresences =
+proto.rollCallService.RollCallServiceClient.prototype.getMyPresences =
     function(request, metadata, callback) {
   return this.client_.rpcCall(this.hostname_ +
-      '/rollCallService.RollCall/GetMyPresences',
+      '/rollCallService.RollCallService/GetMyPresences',
       request,
       metadata || {},
-      methodDescriptor_RollCall_GetMyPresences,
+      methodDescriptor_RollCallService_GetMyPresences,
       callback);
 };
 
@@ -375,13 +375,13 @@ proto.rollCallService.RollCallClient.prototype.getMyPresences =
  * @return {!Promise<!proto.rollCallService.GetMyPresencesRes>}
  *     Promise that resolves to the response
  */
-proto.rollCallService.RollCallPromiseClient.prototype.getMyPresences =
+proto.rollCallService.RollCallServicePromiseClient.prototype.getMyPresences =
     function(request, metadata) {
   return this.client_.unaryCall(this.hostname_ +
-      '/rollCallService.RollCall/GetMyPresences',
+      '/rollCallService.RollCallService/GetMyPresences',
       request,
       metadata || {},
-      methodDescriptor_RollCall_GetMyPresences);
+      methodDescriptor_RollCallService_GetMyPresences);
 };
 
 

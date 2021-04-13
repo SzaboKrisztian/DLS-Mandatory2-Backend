@@ -4,7 +4,8 @@ import {
     PrimaryGeneratedColumn,
     BaseEntity,
     ManyToOne,
-    CreateDateColumn
+    CreateDateColumn,
+    Generated
 }
 from 'typeorm';
 import { RollCall } from './';
@@ -14,6 +15,7 @@ import { RollCall } from './';
     id: number;
 
     @Column()
+    @Generated("uuid")
     code: string;
 
     @ManyToOne(() => RollCall)

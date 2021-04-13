@@ -1,7 +1,7 @@
 import type * as grpc from '@grpc/grpc-js';
 import type { ServiceDefinition, EnumTypeDefinition, MessageTypeDefinition } from '@grpc/proto-loader';
 
-import type { RollCallClient as _rollCallService_RollCallClient } from './rollCallService/RollCall';
+import type { RollCallServiceClient as _rollCallService_RollCallServiceClient } from './rollCallService/RollCallService';
 
 type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> = {
   new(...args: ConstructorParameters<Constructor>): Subtype;
@@ -15,7 +15,7 @@ export interface ProtoGrpcType {
     GetMyPresencesReq: MessageTypeDefinition
     GetMyPresencesRes: MessageTypeDefinition
     Presence: MessageTypeDefinition
-    RollCall: SubtypeConstructor<typeof grpc.Client, _rollCallService_RollCallClient> & { service: ServiceDefinition }
+    RollCallService: SubtypeConstructor<typeof grpc.Client, _rollCallService_RollCallServiceClient> & { service: ServiceDefinition }
     StartRollCallReq: MessageTypeDefinition
     ValidateRes: MessageTypeDefinition
   }

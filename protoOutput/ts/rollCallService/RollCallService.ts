@@ -9,7 +9,7 @@ import type { GetMyPresencesRes as _rollCallService_GetMyPresencesRes, GetMyPres
 import type { StartRollCallReq as _rollCallService_StartRollCallReq, StartRollCallReq__Output as _rollCallService_StartRollCallReq__Output } from '../rollCallService/StartRollCallReq';
 import type { ValidateRes as _rollCallService_ValidateRes, ValidateRes__Output as _rollCallService_ValidateRes__Output } from '../rollCallService/ValidateRes';
 
-export interface RollCallClient extends grpc.Client {
+export interface RollCallServiceClient extends grpc.Client {
   EndRollCall(argument: _rollCallService_EndRollCallReq, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_EndRollCallRes__Output) => void): grpc.ClientUnaryCall;
   EndRollCall(argument: _rollCallService_EndRollCallReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _rollCallService_EndRollCallRes__Output) => void): grpc.ClientUnaryCall;
   EndRollCall(argument: _rollCallService_EndRollCallReq, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_EndRollCallRes__Output) => void): grpc.ClientUnaryCall;
@@ -44,7 +44,7 @@ export interface RollCallClient extends grpc.Client {
   
 }
 
-export interface RollCallHandlers extends grpc.UntypedServiceImplementation {
+export interface RollCallServiceHandlers extends grpc.UntypedServiceImplementation {
   EndRollCall: grpc.handleUnaryCall<_rollCallService_EndRollCallReq__Output, _rollCallService_EndRollCallRes>;
   
   GetMyPresences: grpc.handleUnaryCall<_rollCallService_GetMyPresencesReq__Output, _rollCallService_GetMyPresencesRes>;

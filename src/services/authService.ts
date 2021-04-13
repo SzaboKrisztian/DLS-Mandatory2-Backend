@@ -8,10 +8,10 @@ import { AccountRepository } from "../repository/AccountRepository";
 import { Account } from "../entity/Account";
 import { AccessToken } from "../entity/AccessToken";
 
-import { AuthServiceHandlers } from "../../proto/authService/AuthService";
-import { ProtoGrpcType as AuthServiceType } from "../../proto/authService";
-import { LoginRequest } from "../../proto/authService/LoginRequest";
-import { LoginResponse } from "../../proto/authService/LoginResponse";
+import { AuthServiceHandlers } from "../../protoOutput/ts/authService/AuthService";
+import { ProtoGrpcType as AuthServiceType } from "../../protoOutput/ts/authService";
+import { LoginRequest } from "../../protoOutput/ts/authService/LoginRequest";
+import { LoginResponse } from "../../protoOutput/ts/authService/LoginResponse";
 
 export const authHandlers: AuthServiceHandlers = {
     async Login(

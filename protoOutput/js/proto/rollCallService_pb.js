@@ -1,4 +1,4 @@
-// source: rollCallService.proto
+// source: proto/rollCallService.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -703,8 +703,7 @@ proto.rollCallService.EndRollCallRes.prototype.toObject = function(opt_includeIn
  */
 proto.rollCallService.EndRollCallRes.toObject = function(includeInstance, msg) {
   var f, obj = {
-    success: jspb.Message.getBooleanFieldWithDefault(msg, 1, false),
-    error: jspb.Message.getFieldWithDefault(msg, 2, "")
+
   };
 
   if (includeInstance) {
@@ -741,14 +740,6 @@ proto.rollCallService.EndRollCallRes.deserializeBinaryFromReader = function(msg,
     }
     var field = reader.getFieldNumber();
     switch (field) {
-    case 1:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setSuccess(value);
-      break;
-    case 2:
-      var value = /** @type {string} */ (reader.readString());
-      msg.setError(value);
-      break;
     default:
       reader.skipField();
       break;
@@ -778,74 +769,6 @@ proto.rollCallService.EndRollCallRes.prototype.serializeBinary = function() {
  */
 proto.rollCallService.EndRollCallRes.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getSuccess();
-  if (f) {
-    writer.writeBool(
-      1,
-      f
-    );
-  }
-  f = /** @type {string} */ (jspb.Message.getField(message, 2));
-  if (f != null) {
-    writer.writeString(
-      2,
-      f
-    );
-  }
-};
-
-
-/**
- * optional bool success = 1;
- * @return {boolean}
- */
-proto.rollCallService.EndRollCallRes.prototype.getSuccess = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 1, false));
-};
-
-
-/**
- * @param {boolean} value
- * @return {!proto.rollCallService.EndRollCallRes} returns this
- */
-proto.rollCallService.EndRollCallRes.prototype.setSuccess = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 1, value);
-};
-
-
-/**
- * optional string error = 2;
- * @return {string}
- */
-proto.rollCallService.EndRollCallRes.prototype.getError = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
-};
-
-
-/**
- * @param {string} value
- * @return {!proto.rollCallService.EndRollCallRes} returns this
- */
-proto.rollCallService.EndRollCallRes.prototype.setError = function(value) {
-  return jspb.Message.setField(this, 2, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.rollCallService.EndRollCallRes} returns this
- */
-proto.rollCallService.EndRollCallRes.prototype.clearError = function() {
-  return jspb.Message.setField(this, 2, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.rollCallService.EndRollCallRes.prototype.hasError = function() {
-  return jspb.Message.getField(this, 2) != null;
 };
 
 

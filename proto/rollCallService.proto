@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package rollCallService;
 
-service RollCall {
+service RollCallService {
     // Teacher procedures
     rpc StartRollCall(StartRollCallReq) returns (stream Code);
     rpc EndRollCall(EndRollCallReq) returns (EndRollCallRes);
@@ -27,10 +27,7 @@ message EndRollCallReq {
     int32 rollCallId = 1;
 }
 
-message EndRollCallRes {
-    bool success = 1;
-    optional string error = 2;
-}
+message EndRollCallRes {}
 
 message ValidateRes {
     bool valid = 1;

@@ -13,10 +13,11 @@ import * as protoLoader from '@grpc/proto-loader';
 import { ensureUser } from "./utils";
 
 import { authServiceProto, authHandlers } from './services/authService';
-import { ProtoGrpcType as GrpcTestType } from '../proto/grpcTest';
-import { GrpcTestHandlers } from '../proto/grpcTest/GrpcTest';
-import { Request } from '../proto/grpcTest/Request';
-import { Reply } from '../proto/grpcTest/Reply';
+import { rollCallServiceProto, rollCallHandlers } from "./services/rollCallService";
+import { ProtoGrpcType as GrpcTestType } from '../protoOutput/ts/grpcTest';
+import { GrpcTestHandlers } from '../protoOutput/ts/grpcTest/GrpcTest';
+import { Request } from '../protoOutput/ts/grpcTest/Request';
+import { Reply } from '../protoOutput/ts/grpcTest/Reply';
 
 const testServer: GrpcTestHandlers = {
     async TestNoAuth(
@@ -55,6 +56,7 @@ function createServer() {
 
     server.addService(proto.grpcTest.GrpcTest.service, testServer);
     server.addService(authServiceProto.authService.AuthService.service, authHandlers);
+    server.addService(rollCallServiceProto.rollCallService.RollCallService.service, rollCallHandlers);
 
     return server;
 }
