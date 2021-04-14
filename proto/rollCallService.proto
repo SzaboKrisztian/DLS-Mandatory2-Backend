@@ -6,6 +6,8 @@ service RollCallService {
     // Teacher procedures
     rpc StartRollCall(StartRollCallReq) returns (stream Code);
     rpc EndRollCall(EndRollCallReq) returns (EndRollCallRes);
+    rpc ListRollCalls(ListRollCallsReq) returns (ListRollCallsRes);
+    rpc ReattachToRollCall(ReattachReq) returns (stream Code);
 
     // Student procedures
     rpc ValidateCode(Code) returns (ValidateRes);
@@ -28,6 +30,16 @@ message EndRollCallReq {
 }
 
 message EndRollCallRes {}
+
+message ListRollCallsReq {}
+
+message ListRollCallsRes {
+    repeated int32 rollCallIds = 1;
+}
+
+message ReattachReq {
+    int32 rollCallId = 1;
+}
 
 message ValidateRes {
     bool valid = 1;

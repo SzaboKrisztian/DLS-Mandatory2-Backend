@@ -8,7 +8,8 @@ import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCall
 const SERVER_HOST = "localhost:50051";
 
 function getTestClient() {
-    const testPkg = protoLoader.loadSync(__dirname + '/../proto/grpcTest.proto');
+    const testPkg = protoLoader.loadSync(__dirname
+        + '/../proto/grpcTest.proto');
     const testProto = (grpc.loadPackageDefinition(testPkg) as unknown) as GrpcTestType;
     return new testProto.grpcTest.GrpcTest(
         SERVER_HOST, 
@@ -17,7 +18,8 @@ function getTestClient() {
 }
 
 function getAuthClient() {
-    const authPkg = protoLoader.loadSync(__dirname + '/../proto/authService.proto');
+    const authPkg = protoLoader.loadSync(__dirname
+        + '/../proto/authService.proto');
     const authProto = (grpc.loadPackageDefinition(authPkg) as unknown) as AuthServiceType;
     return new authProto.authService.AuthService(
         SERVER_HOST,
@@ -26,7 +28,8 @@ function getAuthClient() {
 }
 
 function getRollCallClient() {
-    const rollCallPkg = protoLoader.loadSync(__dirname + '/../proto/rollCallService.proto');
+    const rollCallPkg = protoLoader.loadSync(__dirname
+        + '/../proto/rollCallService.proto');
     const rollCallProto = (grpc.loadPackageDefinition(rollCallPkg) as unknown) as RollCallServiceType;
     return new rollCallProto.rollCallService.RollCallService(
         SERVER_HOST, 
@@ -130,10 +133,11 @@ if (process.argv.length > 2) {
             });
             call.on('end', function() {
                 console.log("Stream ended");
-            })
+            });
             break;
 
         case "endRollCall":
+        case "reattach":
             const rollCallId = parseInt(process.argv[3], 10);
             if (Number.isNaN(rollCallId)) {
                 console.error("Invalid roll call id");
@@ -141,13 +145,37 @@ if (process.argv.length > 2) {
             }
 
             const rcClient = getRollCallClient();
-            rcClient.EndRollCall({ rollCallId }, metadata, (err, res) => {
+            if (action === "endRollCall") {
+                rcClient.EndRollCall({ rollCallId }, metadata, (err, res) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log("Roll call successfully stopped.");
+                    }
+                });
+            } else {
+                const call2 = rcClient.ReattachToRollCall({ rollCallId }, metadata);
+
+                call2.on('data', function(code) {
+                    console.log(code);
+                });
+                call2.on('error', function(error) {
+                    console.log(error);
+                });
+                call2.on('end', function() {
+                    console.log("Stream ended");
+                });
+            }
+            break;
+
+        case "list":
+            getRollCallClient().ListRollCalls(null, metadata, (err, res) => {
                 if (err) {
                     console.error(err);
-                } else {
-                    console.log("Roll call successfully stopped.");
+                } else if (res) {
+                    console.log(res);
                 }
-            })
+            });
             break;
 
         case "whoami":
@@ -170,7 +198,6 @@ if (process.argv.length > 2) {
                     const creds = __dirname + "/creds.txt";
                     const stats = fs.statSync(creds);
                     if (stats) {
-                        console.log(stats);
                         fs.unlinkSync(creds);
                     }
                 }

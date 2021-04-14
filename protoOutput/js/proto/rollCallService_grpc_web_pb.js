@@ -228,6 +228,161 @@ proto.rollCallService.RollCallServicePromiseClient.prototype.endRollCall =
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.rollCallService.ListRollCallsReq,
+ *   !proto.rollCallService.ListRollCallsRes>}
+ */
+const methodDescriptor_RollCallService_ListRollCalls = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/ListRollCalls',
+  grpc.web.MethodType.UNARY,
+  proto.rollCallService.ListRollCallsReq,
+  proto.rollCallService.ListRollCallsRes,
+  /**
+   * @param {!proto.rollCallService.ListRollCallsReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.rollCallService.ListRollCallsRes.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.rollCallService.ListRollCallsReq,
+ *   !proto.rollCallService.ListRollCallsRes>}
+ */
+const methodInfo_RollCallService_ListRollCalls = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.rollCallService.ListRollCallsRes,
+  /**
+   * @param {!proto.rollCallService.ListRollCallsReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.rollCallService.ListRollCallsRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.rollCallService.ListRollCallsReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.rollCallService.ListRollCallsRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.ListRollCallsRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.rollCallService.RollCallServiceClient.prototype.listRollCalls =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/rollCallService.RollCallService/ListRollCalls',
+      request,
+      metadata || {},
+      methodDescriptor_RollCallService_ListRollCalls,
+      callback);
+};
+
+
+/**
+ * @param {!proto.rollCallService.ListRollCallsReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.rollCallService.ListRollCallsRes>}
+ *     Promise that resolves to the response
+ */
+proto.rollCallService.RollCallServicePromiseClient.prototype.listRollCalls =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/rollCallService.RollCallService/ListRollCalls',
+      request,
+      metadata || {},
+      methodDescriptor_RollCallService_ListRollCalls);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.rollCallService.ReattachReq,
+ *   !proto.rollCallService.Code>}
+ */
+const methodDescriptor_RollCallService_ReattachToRollCall = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/ReattachToRollCall',
+  grpc.web.MethodType.SERVER_STREAMING,
+  proto.rollCallService.ReattachReq,
+  proto.rollCallService.Code,
+  /**
+   * @param {!proto.rollCallService.ReattachReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.rollCallService.Code.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.rollCallService.ReattachReq,
+ *   !proto.rollCallService.Code>}
+ */
+const methodInfo_RollCallService_ReattachToRollCall = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.rollCallService.Code,
+  /**
+   * @param {!proto.rollCallService.ReattachReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.rollCallService.Code.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.rollCallService.ReattachReq} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.Code>}
+ *     The XHR Node Readable Stream
+ */
+proto.rollCallService.RollCallServiceClient.prototype.reattachToRollCall =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/rollCallService.RollCallService/ReattachToRollCall',
+      request,
+      metadata || {},
+      methodDescriptor_RollCallService_ReattachToRollCall);
+};
+
+
+/**
+ * @param {!proto.rollCallService.ReattachReq} request The request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.Code>}
+ *     The XHR Node Readable Stream
+ */
+proto.rollCallService.RollCallServicePromiseClient.prototype.reattachToRollCall =
+    function(request, metadata) {
+  return this.client_.serverStreaming(this.hostname_ +
+      '/rollCallService.RollCallService/ReattachToRollCall',
+      request,
+      metadata || {},
+      methodDescriptor_RollCallService_ReattachToRollCall);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.rollCallService.Code,
  *   !proto.rollCallService.ValidateRes>}
  */

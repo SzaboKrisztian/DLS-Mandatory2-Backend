@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { getManager } from "typeorm";
 import { AccessToken, Student, Teacher } from "../entity";
 
-export async function ensureUser(call: any, callback: Function, adminRequired?: boolean) {
+export async function ensureUser(call: any, callback: Function, teacherRequired?: boolean, adminRequired?: boolean) {
 
     const metadata = call.metadata as grpc.Metadata;
     const tokens = metadata.get('authorization');
@@ -11,7 +11,7 @@ export async function ensureUser(call: any, callback: Function, adminRequired?: 
         callback({
             code: grpc.status.UNAUTHENTICATED,
             message: "No token supplied"
-        })
+        });
     } else {
         const manager = getManager();
         const receivedToken = tokens[0];
@@ -29,9 +29,12 @@ export async function ensureUser(call: any, callback: Function, adminRequired?: 
                     message: "Invalid token supplied"
                 });
             }
-            const student = await manager.findOne(Student, { where: { account: { id: (decoded as any).userId } } });
+            const student = await manager.findOne(Student, {
+                where: { account: { id: (decoded as any).userId } },
+                relations: ["account"]
+            });
             if (student) {
-                if (adminRequired) {
+                if (teacherRequired || adminRequired) {
                     callback({
                         code: grpc.status.PERMISSION_DENIED,
                         message: "Not authorized"
@@ -40,7 +43,10 @@ export async function ensureUser(call: any, callback: Function, adminRequired?: 
                     return student;
                 }
             } else {
-                const teacher = await manager.findOne(Teacher, { where: { account: { id: (decoded as any).userId } } });
+                const teacher = await manager.findOne(Teacher, {
+                    where: { account: { id: (decoded as any).userId } },
+                    relations: ["account"]
+                });
                 if (adminRequired && !teacher.admin) {
                     callback({
                         code: grpc.status.PERMISSION_DENIED,

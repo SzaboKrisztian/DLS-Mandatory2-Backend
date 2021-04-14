@@ -6,8 +6,6 @@ import * as bcrypt from "bcrypt";
 
 import { getCustomRepository, getRepository } from "typeorm";
 import { AccountRepository } from "../repository/AccountRepository";
-import { Account } from "../entity/Account";
-import { AccessToken } from "../entity/AccessToken";
 
 import { AuthServiceHandlers } from "../../protoOutput/ts/authService/AuthService";
 import { ProtoGrpcType as AuthServiceType } from "../../protoOutput/ts/authService";
@@ -16,7 +14,7 @@ import { LoginResponse } from "../../protoOutput/ts/authService/LoginResponse";
 import { LogoutResponse } from "../../protoOutput/ts/authService/LogoutResponse";
 import { GetUserResponse } from "../../protoOutput/ts/authService/GetUserResponse";
 import { ensureUser } from "../utils";
-import { Student, Teacher } from "../entity";
+import { AccessToken, Student, Teacher } from "../entity";
 
 export const authHandlers: AuthServiceHandlers = {
     async Login(
@@ -94,7 +92,7 @@ export const authHandlers: AuthServiceHandlers = {
         }
 
         const isTeacher = user instanceof Teacher;
-        const isAdmin = (user as Teacher).admin;
+        const isAdmin = Boolean((user as Teacher)?.admin);
         let accId: number;
         if (isTeacher) {
             const teacherRepo = getRepository(Teacher);
