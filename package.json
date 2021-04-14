@@ -10,6 +10,7 @@
       "@types/bcrypt": "^3.0.1",
       "@types/google-protobuf": "^3.7.4",
       "@types/jsonwebtoken": "^8.5.1",
+      "@types/uuid": "^8.3.0",
       "bcrypt": "^5.0.1",
       "date-fns": "^2.20.3",
       "dotenv": "^8.2.0",
@@ -19,7 +20,8 @@
       "jsonwebtoken": "^8.5.1",
       "reflect-metadata": "^0.1.10",
       "sqlite3": "^5.0.2",
-      "typeorm": "0.2.32"
+      "typeorm": "0.2.32",
+      "uuid": "^8.3.2"
    },
    "devDependencies": {
       "@types/node": "^8.0.29",

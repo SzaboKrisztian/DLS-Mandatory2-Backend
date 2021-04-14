@@ -8,7 +8,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn
 } from "typeorm";
-import { Code, Course, Presence } from "./";
+import { Course, Presence } from "./";
 
 @Entity()
 export class RollCall extends BaseEntity {
@@ -26,9 +26,6 @@ export class RollCall extends BaseEntity {
 
     @ManyToOne(() => Course, (course) => course.rollCalls)
     course: Course;
-
-    @OneToMany(() => Code, (code) => code.rollCall, { nullable: true })
-    codes: Code[];
 
     @OneToMany(() => Presence, (presence) => presence.rollCall, { nullable: true })
     presences: Presence[];

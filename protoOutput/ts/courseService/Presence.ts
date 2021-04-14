@@ -1,4 +1,4 @@
-// Original file: proto/rollCallService.proto
+// Original file: proto/courseService.proto
 
 
 export interface Presence {

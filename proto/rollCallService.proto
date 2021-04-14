@@ -11,7 +11,6 @@ service RollCallService {
 
     // Student procedures
     rpc ValidateCode(Code) returns (ValidateRes);
-    rpc GetMyPresences(GetMyPresencesReq) returns (GetMyPresencesRes);
 }
 
 message StartRollCallReq {
@@ -43,20 +42,7 @@ message ReattachReq {
 
 message ValidateRes {
     bool valid = 1;
-    bool markedAsPresent = 2;
+    int32 numValidCodes = 2;
+    bool markedAsPresent = 3;
 }
 
-message GetMyPresencesReq {
-    optional string startDate = 1;
-    optional string endDate = 2;
-}
-
-message GetMyPresencesRes {
-    repeated Presence presences = 1;
-}
-
-message Presence {
-    int32 id = 1;
-    int32 rollCallId = 2;
-    string timestamp = 3;
-}

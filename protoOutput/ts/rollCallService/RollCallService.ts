@@ -4,8 +4,6 @@ import type * as grpc from '@grpc/grpc-js'
 import type { Code as _rollCallService_Code, Code__Output as _rollCallService_Code__Output } from '../rollCallService/Code';
 import type { EndRollCallReq as _rollCallService_EndRollCallReq, EndRollCallReq__Output as _rollCallService_EndRollCallReq__Output } from '../rollCallService/EndRollCallReq';
 import type { EndRollCallRes as _rollCallService_EndRollCallRes, EndRollCallRes__Output as _rollCallService_EndRollCallRes__Output } from '../rollCallService/EndRollCallRes';
-import type { GetMyPresencesReq as _rollCallService_GetMyPresencesReq, GetMyPresencesReq__Output as _rollCallService_GetMyPresencesReq__Output } from '../rollCallService/GetMyPresencesReq';
-import type { GetMyPresencesRes as _rollCallService_GetMyPresencesRes, GetMyPresencesRes__Output as _rollCallService_GetMyPresencesRes__Output } from '../rollCallService/GetMyPresencesRes';
 import type { ListRollCallsReq as _rollCallService_ListRollCallsReq, ListRollCallsReq__Output as _rollCallService_ListRollCallsReq__Output } from '../rollCallService/ListRollCallsReq';
 import type { ListRollCallsRes as _rollCallService_ListRollCallsRes, ListRollCallsRes__Output as _rollCallService_ListRollCallsRes__Output } from '../rollCallService/ListRollCallsRes';
 import type { ReattachReq as _rollCallService_ReattachReq, ReattachReq__Output as _rollCallService_ReattachReq__Output } from '../rollCallService/ReattachReq';
@@ -21,15 +19,6 @@ export interface RollCallServiceClient extends grpc.Client {
   endRollCall(argument: _rollCallService_EndRollCallReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _rollCallService_EndRollCallRes__Output) => void): grpc.ClientUnaryCall;
   endRollCall(argument: _rollCallService_EndRollCallReq, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_EndRollCallRes__Output) => void): grpc.ClientUnaryCall;
   endRollCall(argument: _rollCallService_EndRollCallReq, callback: (error?: grpc.ServiceError, result?: _rollCallService_EndRollCallRes__Output) => void): grpc.ClientUnaryCall;
-  
-  GetMyPresences(argument: _rollCallService_GetMyPresencesReq, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  GetMyPresences(argument: _rollCallService_GetMyPresencesReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  GetMyPresences(argument: _rollCallService_GetMyPresencesReq, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  GetMyPresences(argument: _rollCallService_GetMyPresencesReq, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  getMyPresences(argument: _rollCallService_GetMyPresencesReq, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  getMyPresences(argument: _rollCallService_GetMyPresencesReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  getMyPresences(argument: _rollCallService_GetMyPresencesReq, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
-  getMyPresences(argument: _rollCallService_GetMyPresencesReq, callback: (error?: grpc.ServiceError, result?: _rollCallService_GetMyPresencesRes__Output) => void): grpc.ClientUnaryCall;
   
   ListRollCalls(argument: _rollCallService_ListRollCallsReq, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _rollCallService_ListRollCallsRes__Output) => void): grpc.ClientUnaryCall;
   ListRollCalls(argument: _rollCallService_ListRollCallsReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _rollCallService_ListRollCallsRes__Output) => void): grpc.ClientUnaryCall;
@@ -63,8 +52,6 @@ export interface RollCallServiceClient extends grpc.Client {
 
 export interface RollCallServiceHandlers extends grpc.UntypedServiceImplementation {
   EndRollCall: grpc.handleUnaryCall<_rollCallService_EndRollCallReq__Output, _rollCallService_EndRollCallRes>;
-  
-  GetMyPresences: grpc.handleUnaryCall<_rollCallService_GetMyPresencesReq__Output, _rollCallService_GetMyPresencesRes>;
   
   ListRollCalls: grpc.handleUnaryCall<_rollCallService_ListRollCallsReq__Output, _rollCallService_ListRollCallsRes>;
   

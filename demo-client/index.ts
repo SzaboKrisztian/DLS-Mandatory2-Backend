@@ -188,6 +188,31 @@ if (process.argv.length > 2) {
                 }
             })
             break;
+        
+        case "validate":
+            if (process.argv.length < 5) {
+                console.error("Not enough arguemnts supplied");
+                console.error("yarn run client validate <rollCallId> <code>");
+                process.exit(1);
+            }
+            const rcId = parseInt(process.argv[3], 10);
+            const code = process.argv[4];
+            if (Number.isNaN(rcId)) {
+                console.error("Invalid roll call id");
+                process.exit(1);
+            }
+            getRollCallClient().ValidateCode(
+                { code, rollCallId: rcId },
+                metadata,
+                (err, res) => {
+                    if (err) {
+                        console.error(err);
+                    } else if (res) {
+                        console.log(res);
+                    }
+                }
+            );
+            break;
 
         case "logout":
             getAuthClient().Logout({}, metadata, (err, res) => {

@@ -3,6 +3,7 @@ import * as protoLoader from "@grpc/proto-loader";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import * as dates from "date-fns";
 import * as util from "util";
+import { v4 as generateUuid } from 'uuid';
 
 import { RollCallServiceHandlers }
     from "../../protoOutput/ts/rollCallService/RollCallService";
@@ -16,10 +17,6 @@ import { EndRollCallRes }
     from "../../protoOutput/ts/rollCallService/EndRollCallRes";
 import { ValidateRes }
     from "../../protoOutput/ts/rollCallService/ValidateRes";
-import { GetMyPresencesReq }
-    from "../../protoOutput/ts/rollCallService/GetMyPresencesReq";
-import { GetMyPresencesRes }
-    from "../../protoOutput/ts/rollCallService/GetMyPresencesRes";
 import { Code as RpcCode } 
     from "../../protoOutput/ts/rollCallService/Code";
 import { ReattachReq }
@@ -31,23 +28,36 @@ import { ListRollCallsRes }
 
 import { getManager } from "typeorm";
 import {
-    RollCall,
-    Code,
-    Course,
     AccessToken,
+    Course,
+    RollCall,
+    Presence,
+    Student,
     Teacher,
 } from "../entity";
 import { ensureUser } from "../utils";
 
 interface RollCallEntry {
+    rollCall: RollCall,
+    presences: { [studentId: string]: boolean }
     courseId: number,
     startedBy: number,
+    codes: string[],
     interval: NodeJS.Timer | null,
     call: grpc.ServerWritableStream<StartRollCallReq, RpcCode> | grpc.ServerWritableStream<ReattachReq, RpcCode>,
     end: () => void
 }
 
 const rollCalls: { [id: string]: RollCallEntry } = {};
+
+const codeSubmissions: {
+    [rollCallId: string]: {
+        [studentId: string]: {
+            code: string,
+            index: number
+        }[]
+    }
+} = {};
 
 setInterval(() => {
     Object.keys(rollCalls).forEach(key => {
@@ -76,16 +86,20 @@ export const rollCallHandlers: RollCallServiceHandlers = {
 
         const course = await manager.findOne(Course, {
             where: { id: courseId },
-            relations: ["teachers"]
+            relations: ["teachers", "students"]
         });
-        // Try to find an interval (aka running rollCall) for courseId
-        const foundInt = Object.keys(rollCalls).find(interval =>
-            rollCalls[interval].courseId === courseId);
+        // Try to find a non-terminated roll call for courseId
+        const found = await manager.findOne(RollCall, {
+            where: {
+                course: course,
+                timeStopped: null
+            }
+        });
         
         // Admins are allowed to start a roll call for any date / period
         // Teacher are only allowed to start a roll call for that particular date
         if (!teacher || !course || dates.isBefore(periodEndDate, periodStartDate)
-            || foundInt !== undefined 
+            || found !== undefined 
             // If the teacher is not an admin, the teacher must be teaching that course
             || (!isAdmin && !course.teachers.find(t => t.id === teacher.id)
                 || !dates.isSameDay(periodStartDate, new Date())
@@ -98,40 +112,52 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         await rollCall.save();
 
         const interval = setInterval(() => {
-            const code = manager.create(Code, { rollCall });
-            code.save().then(code2 => call.write({
-                code: code2.code,
+            const code = generateUuid();
+            rollCalls[rollCall.id].codes.push(code);
+            call.write({
+                code,
                 rollCallId: rollCall.id
-            })).catch(err => console.error(err));
+            });
         }, 2000);
 
         rollCalls[rollCall.id] = {
+            rollCall,
+            presences: {},
             courseId: course.id,
             call,
             interval,
+            codes: [],
             startedBy: teacher.id,
             end: () => {
                 call.end();
                 clearInterval(interval);
                 delete rollCalls[rollCall.id];
+                delete codeSubmissions[rollCall.id];
                 rollCall.timeStopped = new Date();
                 rollCall.save();
-                console.log(`Roll call id=${rollCall.id} stopped:`);
-                console.log(util.inspect(rollCalls, {
-                    showHidden: false,
-                    depth: 1,
-                    colors: true
-                }));
-                manager.delete(Code, { rollCall });
+                console.log(`Roll call id=${rollCall.id} stopped. Active roll calls:`);
+                if (Object.keys(rollCalls).length > 0) {
+                    Object.keys(rollCalls).forEach(k => {
+                        console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy}`);
+                    });
+                } else {
+                    console.log("None.");
+                }
             }
         }
 
-        console.log(`Roll call id=${rollCall.id} started:`);
-        console.log(util.inspect(rollCalls, {
-            showHidden: false,
-            depth: 1,
-            colors: true
-        }));
+        course.students.forEach(s => rollCalls[rollCall.id].presences[s.id] = false);
+
+        codeSubmissions[rollCall.id] = {};
+
+        console.log(`Roll call id=${rollCall.id} started. Active roll calls:`);
+        if (Object.keys(rollCalls).length > 0) {
+            Object.keys(rollCalls).forEach(k => {
+                console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy}`);
+            });
+        } else {
+            console.log("None.");
+        }
     },
 
     async EndRollCall(
@@ -177,7 +203,6 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             }
             rollCall.timeStopped = new Date();
             rollCall.save();
-            manager.delete(Code, { rollCall });
             callback(null);
         }
     },
@@ -195,7 +220,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         const { rollCallId } = call.request;
         const rollCall = await manager.findOne(RollCall, {
             where: { id: rollCallId },
-            relations: ["course", "course.teachers"]
+            relations: ["course", "course.teachers", "course.students"]
         });
         
         if (!teacher || !rollCall
@@ -213,22 +238,27 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         }
 
         const interval = setInterval(() => {
-            const code = manager.create(Code, { rollCall });
-            code.save().then(code2 => call.write({
-                code: code2.code,
+            const code = generateUuid();
+            rollCalls[rollCall.id].codes.push(code);
+            call.write({
+                code,
                 rollCallId: rollCall.id
-            })).catch(err => console.error(err));
+            });
         }, 2000);
 
         rollCalls[rollCall.id] = {
+            rollCall,
+            presences: {},
             courseId: rollCall.course.id,
             call,
             interval,
+            codes: [],
             startedBy: author,
             end: () => {
                 call.end();
                 clearInterval(interval);
                 delete rollCalls[rollCall.id];
+                delete codeSubmissions[rollCall.id];
                 rollCall.timeStopped = new Date();
                 rollCall.save();
                 console.log(`Roll call id=${rollCall.id} stopped:`);
@@ -239,6 +269,15 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 }));
             }
         };
+
+        rollCall.course.students.forEach(s => rollCalls[rollCall.id].presences[s.id] = false);
+        const presences = await manager.find(Presence, {
+            where: { rollCall },
+            relations: ["student"]
+        });
+        presences.forEach(p => rollCalls[rollCall.id].presences[p.student.id] = true);
+
+        codeSubmissions[rollCall.id] = {};
 
         console.log(`Reattached to roll call id=${rollCall.id}:`);
         console.log(util.inspect(rollCalls, {
@@ -262,7 +301,6 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         });
 
         if (!(user as Teacher).admin) {
-            console.log(rollCalls);
             const filteredRcs = rollCalls.filter(rc =>
                 rc.course.teachers.find(t => t.id === user.id) !== undefined);
             callback(null, { rollCallIds: filteredRcs.map(rc => rc.id) });
@@ -271,18 +309,87 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         }
     },
 
-    ValidateCode(
+    async ValidateCode(
         call: grpc.ServerUnaryCall<RpcCode, ValidateRes>,
         callback: grpc.sendUnaryData<ValidateRes>
     ) {
-        console.log(call.request);
-    },
+        const { code, rollCallId } = call.request;
+        const manager = getManager();
+        const rollCall = rollCalls[rollCallId].rollCall;
 
-    GetMyPresences(
-        call: grpc.ServerUnaryCall<GetMyPresencesReq, GetMyPresencesRes>,
-        callback: grpc.sendUnaryData<GetMyPresencesRes>
-    ) {
-        console.log(call.request);
+        const student = await ensureUser(call, callback);
+        if (!student) return;
+        if (!(student instanceof Student)) {
+            callback({
+                code: grpc.status.PERMISSION_DENIED,
+                message: "Only students may respond to a roll call"
+            });
+            return;
+        }
+
+        if (!rollCalls[rollCallId]) {
+            callback({ code: grpc.status.INTERNAL, message: "Invalid roll call." });
+            return;
+        }
+
+        if (rollCalls[rollCallId].presences[student.id] !== false) {
+            callback({
+                code: grpc.status.INTERNAL,
+                message: "You are not part of the course or have already been marked present." });
+            return;
+        }
+
+        const subCodes = codeSubmissions[rollCallId];
+        if (!subCodes[student.id]) {
+            subCodes[student.id] = [];
+        }
+        const myCodes = subCodes[student.id];
+        const codes = rollCalls[rollCallId].codes;
+
+        if (myCodes.length === 0) {
+            const start = codes.length < 15 ? 0 : codes.length - 15;
+            const index = codes.indexOf(code, start);
+            if (index === -1) {
+                callback(null, {
+                    valid: false,
+                    numValidCodes: 0,
+                    markedAsPresent: false
+                });
+            } else {
+                myCodes.push({ code, index });
+                callback(null, {
+                    valid: true,
+                    numValidCodes: 1,
+                    markedAsPresent: false
+                });
+            }
+        } else {
+            const last = myCodes[myCodes.length - 1];
+            if (codes.length > last.index + 1 && code === codes[last.index + 1]) {
+                myCodes.push({ code, index: last.index + 1 });
+                const numCorrect = myCodes.length;
+                callback(null, {
+                    valid: true,
+                    numValidCodes: numCorrect,
+                    markedAsPresent: numCorrect === 3
+                });
+                if (numCorrect === 3) {
+                    rollCalls[rollCallId].presences[student.id] = true;
+                    delete codeSubmissions[rollCallId][student.id];
+                    const presence = manager.create(Presence);
+                    presence.rollCall = rollCall;
+                    presence.student = student;
+                    presence.save();
+                }
+            } else {
+                myCodes.splice(0, myCodes.length);
+                callback(null, {
+                    valid: false,
+                    numValidCodes: 0,
+                    markedAsPresent: false
+                });
+            }
+        }
     }
 }
 
