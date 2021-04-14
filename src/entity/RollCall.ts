@@ -24,13 +24,13 @@ export class RollCall extends BaseEntity {
     @Column({ nullable: true, default: null })
     timeStopped: Date;
 
-    @OneToMany(() => Course, (course) => course.rollCalls)
+    @ManyToOne(() => Course, (course) => course.rollCalls)
     course: Course;
 
-    @ManyToOne(() => Code, (code) => code.rollCall, { nullable: true })
+    @OneToMany(() => Code, (code) => code.rollCall, { nullable: true })
     codes: Code[];
 
-    @ManyToOne(() => Presence, (presence) => presence.rollCall, { nullable: true })
+    @OneToMany(() => Presence, (presence) => presence.rollCall, { nullable: true })
     presences: Presence[];
 
     @CreateDateColumn()

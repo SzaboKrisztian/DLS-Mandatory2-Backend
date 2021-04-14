@@ -6,9 +6,9 @@ import {
     OneToOne,
     JoinColumn,
     ManyToMany,
-    ManyToOne,
     CreateDateColumn,
-    UpdateDateColumn
+    UpdateDateColumn,
+    OneToMany
 } from "typeorm";
 import { Account, Course, Presence } from "./";
 
@@ -30,7 +30,7 @@ export class Student extends BaseEntity {
     @ManyToMany(() => Course, (course) => course.students, { nullable: true })
     courses: Course[];
 
-    @ManyToOne(() => Presence, (presence) => presence.rollCall, { nullable: true })
+    @OneToMany(() => Presence, (presence) => presence.rollCall, { nullable: true })
     presences: Presence[];
 
     @CreateDateColumn()

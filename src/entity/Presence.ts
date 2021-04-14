@@ -2,8 +2,8 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     BaseEntity,
-    OneToMany,
-    CreateDateColumn
+    CreateDateColumn,
+    ManyToOne
 } from "typeorm";
 import { Student, RollCall } from "./";
 
@@ -12,10 +12,10 @@ export class Presence extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToMany(() => RollCall, rollCall => rollCall.presences)
+    @ManyToOne(() => RollCall, rollCall => rollCall.presences)
     rollCall: RollCall;
 
-    @OneToMany(() => Student, student => student.presences)
+    @ManyToOne(() => Student, student => student.presences)
     student: Student;
 
     @CreateDateColumn()

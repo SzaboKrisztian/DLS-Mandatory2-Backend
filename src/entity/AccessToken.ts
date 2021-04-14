@@ -14,7 +14,7 @@ export class AccessToken extends BaseEntity {
     @PrimaryColumn()
     token: string;
 
-    @ManyToOne(() => Account)
+    @ManyToOne(() => Account, (account) => account.tokens)
     account: Account;
 
     @Column({ default: true })

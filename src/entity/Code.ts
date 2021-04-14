@@ -18,7 +18,7 @@ import { RollCall } from './';
     @Generated("uuid")
     code: string;
 
-    @ManyToOne(() => RollCall)
+    @ManyToOne(() => RollCall, (rollCall) => rollCall.codes)
     rollCall: RollCall;
 
     @CreateDateColumn()

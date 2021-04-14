@@ -5,5 +5,5 @@ build/
 tmp/
 temp/
 .env
-database/**/*
+database/data.sql
 demo-client/creds.txt

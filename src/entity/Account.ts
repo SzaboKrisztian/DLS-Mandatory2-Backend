@@ -22,7 +22,7 @@ export class Account extends BaseEntity {
     @Column()
     password: string;
 
-    @OneToMany(() => AccessToken, (token) => token.account)
+    @OneToMany(() => AccessToken, (token) => token.account, { nullable: true })
     tokens: AccessToken[];
 
     @CreateDateColumn()
