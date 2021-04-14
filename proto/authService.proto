@@ -4,6 +4,8 @@ package authService;
 
 service AuthService {
     rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Logout (LogoutRequest) returns (LogoutResponse) {}
+    rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
 }
 
 message LoginRequest {
@@ -14,4 +16,21 @@ message LoginRequest {
 message LoginResponse {
     string token = 1;
     int32 userId = 2;
+}
+
+message LogoutRequest {}
+
+message LogoutResponse {
+    string message = 1;
+}
+
+message GetUserRequest {}
+
+message GetUserResponse {
+    bool isTeacher = 1;
+    bool isAdmin = 2;
+    int32 id = 3;
+    string firstName = 4;
+    string lastName = 5;
+    int32 accountId = 6;
 }

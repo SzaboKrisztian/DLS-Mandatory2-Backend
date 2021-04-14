@@ -11,9 +11,7 @@ export class TeacherRepository extends AbstractRepository<Teacher> {
         const teacher = new Teacher();
         teacher.firstName = firstName;
         teacher.lastName = lastName;
-        if (admin) {
-            teacher.admin = true;
-        }
+        teacher.admin = admin;
         teacher.account = await accRepo.create(email, password);
         await teacher.save();
 

@@ -149,6 +149,34 @@ if (process.argv.length > 2) {
                 }
             })
             break;
+
+        case "whoami":
+            const authClient = getAuthClient();
+            authClient.GetUser(null, metadata, (err, res) => {
+                if (err) {
+                    console.error(err);
+                } else if (res) {
+                    console.log(res);
+                }
+            })
+            break;
+
+        case "logout":
+            getAuthClient().Logout({}, metadata, (err, res) => {
+                if (err) {
+                    console.error(err);
+                } else if (res) {
+                    console.log(res);
+                    const creds = __dirname + "/creds.txt";
+                    const stats = fs.statSync(creds);
+                    if (stats) {
+                        console.log(stats);
+                        fs.unlinkSync(creds);
+                    }
+                }
+            });
+            break;
+
         default:
             console.error("Invalid action");
     }
