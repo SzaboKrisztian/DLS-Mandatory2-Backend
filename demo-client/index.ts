@@ -3,6 +3,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import * as fs from "fs";
 import { ProtoGrpcType as AuthServiceType } from '../protoOutput/ts/authService';
 import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCallService";
+import { ProtoGrpcType as CourseServiceType } from "../protoOutput/ts/courseService";
 
 const SERVER_HOST = "localhost:50051";
 
@@ -24,6 +25,25 @@ function getRollCallClient() {
         SERVER_HOST, 
         grpc.credentials.createInsecure()
     );
+}
+
+function getCourseClient() {
+    const coursePkg = protoLoader.loadSync(__dirname
+        + '/../proto/courseService.proto');
+    const courseProto = (grpc.loadPackageDefinition(coursePkg) as unknown) as CourseServiceType;
+    return new courseProto.courseService.CourseService(
+        SERVER_HOST, 
+        grpc.credentials.createInsecure()
+    );
+}
+
+function logErrAndRes(err, res) {
+    if (err) {
+        console.log(err);
+    }
+    if (res) {
+        console.log(res);
+    }
 }
 
 if (process.argv.length > 2) {
@@ -147,13 +167,7 @@ if (process.argv.length > 2) {
 
         case "whoami":
             const authClient = getAuthClient();
-            authClient.GetUser(null, metadata, (err, res) => {
-                if (err) {
-                    console.error(err);
-                } else if (res) {
-                    console.log(res);
-                }
-            })
+            authClient.GetUser(null, metadata, logErrAndRes);
             break;
         
         case "validate":
@@ -194,6 +208,10 @@ if (process.argv.length > 2) {
                     }
                 }
             });
+            break;
+
+        case "mycourses":
+            getCourseClient().GetMyCourses({}, metadata, logErrAndRes);
             break;
 
         default:

@@ -19,7 +19,7 @@ export class Presence extends BaseEntity {
     @ManyToOne(() => Student, student => student.presences)
     student: Student;
 
-    @Column()
+    @ManyToOne(() => Teacher)
     markedBy: Teacher;
 
     @CreateDateColumn()

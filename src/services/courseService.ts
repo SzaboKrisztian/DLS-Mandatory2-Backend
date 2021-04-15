@@ -62,6 +62,7 @@ import {
     Course,
     RollCall,
     Presence,
+    Student,
     Teacher
 } from "../entity";
 import {
@@ -69,7 +70,6 @@ import {
     ensureStudent,
     ensureTeacher,
     ensureAdmin,
-    getUserForAccount
 } from "../utils";
 
 export const courseHandlers: CourseServiceHandlers = {
@@ -83,10 +83,26 @@ export const courseHandlers: CourseServiceHandlers = {
         const account = await ensureAccount(call, callback);
         if (!account) return;
 
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
+        const manager = getManager();
+
+        let user: Student | Teacher;
+        const student = await manager.findOne(Student, {
+            where: { account },
+            relations: ["account", "courses"]
         });
+
+        if (student) {
+            user = student;
+        } else {
+            user = await manager.findOne(Teacher, {
+                where: { account },
+                relations: ["account", "courses"]
+            });
+        }
+
+        const result = user.courses.map(c => ({ id: c.id, name: c.name }));
+
+        callback(null, { courses: result });
     },
 
     // Student procedures
@@ -98,10 +114,20 @@ export const courseHandlers: CourseServiceHandlers = {
         const student = await ensureStudent(call, callback);
         if (!student) return;
 
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
+        const manager = getManager();
+
+        const presences = await manager.find(Presence, {
+            where: { student },
+            relations: ["rollCall"]
         });
+
+        const result = presences.map(p => ({
+            id: p.id,
+            rollCallId: p.rollCall.id,
+            timestamp: p.createdAt.toISOString()
+        }));
+
+        callback(null, { presences: result });
     },
 
     // Teacher procedures
@@ -112,6 +138,8 @@ export const courseHandlers: CourseServiceHandlers = {
     ) {
         const teacher = await ensureTeacher(call, callback);
         if (!teacher) return;
+
+        
 
         callback({
             code: grpc.status.UNIMPLEMENTED,
