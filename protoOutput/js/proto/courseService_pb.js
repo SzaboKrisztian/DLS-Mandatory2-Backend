@@ -3128,7 +3128,8 @@ proto.courseService.TeacherForCourseReq.prototype.toObject = function(opt_includ
  */
 proto.courseService.TeacherForCourseReq.toObject = function(includeInstance, msg) {
   var f, obj = {
-    courseid: jspb.Message.getFieldWithDefault(msg, 1, 0)
+    courseid: jspb.Message.getFieldWithDefault(msg, 1, 0),
+    teacherid: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -3169,6 +3170,10 @@ proto.courseService.TeacherForCourseReq.deserializeBinaryFromReader = function(m
       var value = /** @type {number} */ (reader.readInt32());
       msg.setCourseid(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setTeacherid(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -3205,6 +3210,13 @@ proto.courseService.TeacherForCourseReq.serializeBinaryToWriter = function(messa
       f
     );
   }
+  f = message.getTeacherid();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -3223,6 +3235,24 @@ proto.courseService.TeacherForCourseReq.prototype.getCourseid = function() {
  */
 proto.courseService.TeacherForCourseReq.prototype.setCourseid = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
+};
+
+
+/**
+ * optional int32 teacherId = 2;
+ * @return {number}
+ */
+proto.courseService.TeacherForCourseReq.prototype.getTeacherid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.courseService.TeacherForCourseReq} returns this
+ */
+proto.courseService.TeacherForCourseReq.prototype.setTeacherid = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -4613,15 +4643,15 @@ proto.courseService.Person.serializeBinaryToWriter = function(message, writer) {
       proto.courseService.Course.serializeBinaryToWriter
     );
   }
-  f = /** @type {number} */ (jspb.Message.getField(message, 5));
-  if (f != null) {
+  f = message.getAccountid();
+  if (f !== 0) {
     writer.writeInt32(
       5,
       f
     );
   }
-  f = /** @type {string} */ (jspb.Message.getField(message, 6));
-  if (f != null) {
+  f = message.getEmail();
+  if (f.length > 0) {
     writer.writeString(
       6,
       f
@@ -4736,25 +4766,7 @@ proto.courseService.Person.prototype.getAccountid = function() {
  * @return {!proto.courseService.Person} returns this
  */
 proto.courseService.Person.prototype.setAccountid = function(value) {
-  return jspb.Message.setField(this, 5, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.courseService.Person} returns this
- */
-proto.courseService.Person.prototype.clearAccountid = function() {
-  return jspb.Message.setField(this, 5, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.courseService.Person.prototype.hasAccountid = function() {
-  return jspb.Message.getField(this, 5) != null;
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -4772,25 +4784,7 @@ proto.courseService.Person.prototype.getEmail = function() {
  * @return {!proto.courseService.Person} returns this
  */
 proto.courseService.Person.prototype.setEmail = function(value) {
-  return jspb.Message.setField(this, 6, value);
-};
-
-
-/**
- * Clears the field making it undefined.
- * @return {!proto.courseService.Person} returns this
- */
-proto.courseService.Person.prototype.clearEmail = function() {
-  return jspb.Message.setField(this, 6, undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.courseService.Person.prototype.hasEmail = function() {
-  return jspb.Message.getField(this, 6) != null;
+  return jspb.Message.setProto3StringField(this, 6, value);
 };
 
 

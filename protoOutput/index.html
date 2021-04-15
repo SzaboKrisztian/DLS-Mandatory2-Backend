@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Protocol Documentation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+    <style>
+      body {
+        width: 60em;
+        margin: 1em auto;
+        color: #222;
+        font-family: "Ubuntu", sans-serif;
+        padding-bottom: 4em;
+      }
+
+      h1 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      h2 {
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+        margin: 1.5em 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      a {
+        text-decoration: none;
+        color: #567e25;
+      }
+
+      table {
+        width: 100%;
+        font-size: 80%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        font-weight: 700;
+        background-color: #dcdcdc;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fbfbfb;
+      }
+
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5ex 2ex;
+      }
+
+      td p {
+        text-indent: 1em;
+        margin: 0;
+      }
+
+      td p:nth-child(1) {
+        text-indent: 0;  
+      }
+
+       
+      .field-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(3) {  
+        width: 6em;
+      }
+      .field-table td:nth-child(4) {  
+        width: auto;
+      }
+
+       
+      .extension-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(3) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(4) {  
+        width: 5em;
+      }
+      .extension-table td:nth-child(5) {  
+        width: auto;
+      }
+
+       
+      .enum-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(3) {  
+        width: auto;
+      }
+
+       
+      .scalar-value-types-table tr {
+        height: 3em;
+      }
+
+       
+      #toc-container ul {
+        list-style-type: none;
+        padding-left: 1em;
+        line-height: 180%;
+        margin: 0;
+      }
+      #toc > li > a {
+        font-weight: bold;
+      }
+
+       
+      .file-heading {
+        width: 100%;
+        display: table;
+        border-bottom: 1px solid #aaa;
+        margin: 4em 0 1.5em 0;
+      }
+      .file-heading h2 {
+        border: none;
+        display: table-cell;
+      }
+      .file-heading a {
+        text-align: right;
+        display: table-cell;
+      }
+
+       
+      .badge {
+        width: 1.6em;
+        height: 1.6em;
+        display: inline-block;
+
+        line-height: 1.6em;
+        text-align: center;
+        font-weight: bold;
+        font-size: 60%;
+
+        color: #89ba48;
+        background-color: #dff0c8;
+
+        margin: 0.5ex 1em 0.5ex -1em;
+        border: 1px solid #fbfbfb;
+        border-radius: 1ex;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  </head>
+
+  <body>
+
+    <h1 id="title">Protocol Documentation</h1>
+
+    <h2>Table of Contents</h2>
+
+    <div id="toc-container">
+      <ul id="toc">
+        
+          
+          <li>
+            <a href="#authService.proto">authService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#authService.GetUserRequest"><span class="badge">M</span>GetUserRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authService.GetUserResponse"><span class="badge">M</span>GetUserResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#authService.LoginRequest"><span class="badge">M</span>LoginRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authService.LoginResponse"><span class="badge">M</span>LoginResponse</a>
+                </li>
+              
+                <li>
+                  <a href="#authService.LogoutRequest"><span class="badge">M</span>LogoutRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authService.LogoutResponse"><span class="badge">M</span>LogoutResponse</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#authService.AuthService"><span class="badge">S</span>AuthService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#courseService.proto">courseService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#courseService.AllCoursesReq"><span class="badge">M</span>AllCoursesReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.AllCoursesRes"><span class="badge">M</span>AllCoursesRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.AllStudentsReq"><span class="badge">M</span>AllStudentsReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.AllStudentsRes"><span class="badge">M</span>AllStudentsRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.AllTeachersReq"><span class="badge">M</span>AllTeachersReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.AllTeachersRes"><span class="badge">M</span>AllTeachersRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.Course"><span class="badge">M</span>Course</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.CreateCourseReq"><span class="badge">M</span>CreateCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.DeleteCourseReq"><span class="badge">M</span>DeleteCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.DeleteCourseRes"><span class="badge">M</span>DeleteCourseRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.GetTeachersForCourseReq"><span class="badge">M</span>GetTeachersForCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.GetTeachersForCourseRes"><span class="badge">M</span>GetTeachersForCourseRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.MyCoursesReq"><span class="badge">M</span>MyCoursesReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.MyCoursesRes"><span class="badge">M</span>MyCoursesRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.MyPresence"><span class="badge">M</span>MyPresence</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.MyPresencesReq"><span class="badge">M</span>MyPresencesReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.MyPresencesRes"><span class="badge">M</span>MyPresencesRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.Person"><span class="badge">M</span>Person</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.Presence"><span class="badge">M</span>Presence</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.PresencesForCourseReq"><span class="badge">M</span>PresencesForCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.PresencesForCourseRes"><span class="badge">M</span>PresencesForCourseRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.RenameCourseReq"><span class="badge">M</span>RenameCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.StudentToCourseReq"><span class="badge">M</span>StudentToCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.StudentToCourseRes"><span class="badge">M</span>StudentToCourseRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.StudentsForCourseReq"><span class="badge">M</span>StudentsForCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.StudentsForCourseRes"><span class="badge">M</span>StudentsForCourseRes</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.TeacherForCourseReq"><span class="badge">M</span>TeacherForCourseReq</a>
+                </li>
+              
+                <li>
+                  <a href="#courseService.TeacherForCourseRes"><span class="badge">M</span>TeacherForCourseRes</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#courseService.CourseService"><span class="badge">S</span>CourseService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#rollCallService.proto">rollCallService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#rollCallService.Code"><span class="badge">M</span>Code</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.EndRollCallReq"><span class="badge">M</span>EndRollCallReq</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.EndRollCallRes"><span class="badge">M</span>EndRollCallRes</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.ListRollCallsReq"><span class="badge">M</span>ListRollCallsReq</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.ListRollCallsRes"><span class="badge">M</span>ListRollCallsRes</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.MarkAsPresentReq"><span class="badge">M</span>MarkAsPresentReq</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.MarkAsPresentRes"><span class="badge">M</span>MarkAsPresentRes</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.ReattachReq"><span class="badge">M</span>ReattachReq</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.StartRollCallReq"><span class="badge">M</span>StartRollCallReq</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.ValidateRes"><span class="badge">M</span>ValidateRes</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#rollCallService.RollCallService"><span class="badge">S</span>RollCallService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+        <li><a href="#scalar-value-types">Scalar Value Types</a></li>
+      </ul>
+    </div>
+
+    
+      
+      <div class="file-heading">
+        <h2 id="authService.proto">authService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="authService.GetUserRequest">GetUserRequest</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="authService.GetUserResponse">GetUserResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>isTeacher</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>isAdmin</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>firstName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="authService.LoginRequest">LoginRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>password</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="authService.LoginResponse">LoginResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>token</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="authService.LogoutRequest">LogoutRequest</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="authService.LogoutResponse">LogoutResponse</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>message</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="authService.AuthService">AuthService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>Login</td>
+                <td><a href="#authService.LoginRequest">LoginRequest</a></td>
+                <td><a href="#authService.LoginResponse">LoginResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>Logout</td>
+                <td><a href="#authService.LogoutRequest">LogoutRequest</a></td>
+                <td><a href="#authService.LogoutResponse">LogoutResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetUser</td>
+                <td><a href="#authService.GetUserRequest">GetUserRequest</a></td>
+                <td><a href="#authService.GetUserResponse">GetUserResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+      
+      <div class="file-heading">
+        <h2 id="courseService.proto">courseService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="courseService.AllCoursesReq">AllCoursesReq</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="courseService.AllCoursesRes">AllCoursesRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courses</td>
+                  <td><a href="#courseService.Course">Course</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.AllStudentsReq">AllStudentsReq</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="courseService.AllStudentsRes">AllStudentsRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>students</td>
+                  <td><a href="#courseService.Person">Person</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.AllTeachersReq">AllTeachersReq</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="courseService.AllTeachersRes">AllTeachersRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>teachers</td>
+                  <td><a href="#courseService.Person">Person</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.Course">Course</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>name</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.CreateCourseReq">CreateCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>name</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.DeleteCourseReq">DeleteCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.DeleteCourseRes">DeleteCourseRes</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="courseService.GetTeachersForCourseReq">GetTeachersForCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.GetTeachersForCourseRes">GetTeachersForCourseRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>teachers</td>
+                  <td><a href="#courseService.Person">Person</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.MyCoursesReq">MyCoursesReq</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="courseService.MyCoursesRes">MyCoursesRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courses</td>
+                  <td><a href="#courseService.Course">Course</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.MyPresence">MyPresence</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>rollCallId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>timestamp</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.MyPresencesReq">MyPresencesReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.MyPresencesRes">MyPresencesRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>presences</td>
+                  <td><a href="#courseService.MyPresence">MyPresence</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.Person">Person</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>firstName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>courses</td>
+                  <td><a href="#courseService.Course">Course</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.Presence">Presence</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>rollCallId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>timestamp</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>studentId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>teacherId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.PresencesForCourseReq">PresencesForCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.PresencesForCourseRes">PresencesForCourseRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>presences</td>
+                  <td><a href="#courseService.Presence">Presence</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.RenameCourseReq">RenameCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>name</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.StudentToCourseReq">StudentToCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>studentId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.StudentToCourseRes">StudentToCourseRes</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="courseService.StudentsForCourseReq">StudentsForCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.StudentsForCourseRes">StudentsForCourseRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>students</td>
+                  <td><a href="#courseService.Person">Person</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.TeacherForCourseReq">TeacherForCourseReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>teacherId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="courseService.TeacherForCourseRes">TeacherForCourseRes</h3>
+        <p></p>
+
+        
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="courseService.CourseService">CourseService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>GetMyCourses</td>
+                <td><a href="#courseService.MyCoursesReq">MyCoursesReq</a></td>
+                <td><a href="#courseService.MyCoursesRes">MyCoursesRes</a></td>
+                <td><p>Common procedures</p></td>
+              </tr>
+            
+              <tr>
+                <td>GeyMyPresences</td>
+                <td><a href="#courseService.MyPresencesReq">MyPresencesReq</a></td>
+                <td><a href="#courseService.MyPresencesRes">MyPresencesRes</a></td>
+                <td><p>Student procedures</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetAllStudents</td>
+                <td><a href="#courseService.AllStudentsReq">AllStudentsReq</a></td>
+                <td><a href="#courseService.AllStudentsRes">AllStudentsRes</a></td>
+                <td><p>Teacher procedures</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetStudentsForCourse</td>
+                <td><a href="#courseService.StudentsForCourseReq">StudentsForCourseReq</a></td>
+                <td><a href="#courseService.StudentsForCourseRes">StudentsForCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>AddStudentToCourse</td>
+                <td><a href="#courseService.StudentToCourseReq">StudentToCourseReq</a></td>
+                <td><a href="#courseService.StudentToCourseRes">StudentToCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>RemoveStudentFromCourse</td>
+                <td><a href="#courseService.StudentToCourseReq">StudentToCourseReq</a></td>
+                <td><a href="#courseService.StudentToCourseRes">StudentToCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetPresencesForCourse</td>
+                <td><a href="#courseService.PresencesForCourseReq">PresencesForCourseReq</a></td>
+                <td><a href="#courseService.PresencesForCourseRes">PresencesForCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetAllCourses</td>
+                <td><a href="#courseService.AllCoursesReq">AllCoursesReq</a></td>
+                <td><a href="#courseService.AllCoursesRes">AllCoursesRes</a></td>
+                <td><p>Admin procedures</p></td>
+              </tr>
+            
+              <tr>
+                <td>GetAllTeachers</td>
+                <td><a href="#courseService.AllTeachersReq">AllTeachersReq</a></td>
+                <td><a href="#courseService.AllTeachersRes">AllTeachersRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetTeachersForCourse</td>
+                <td><a href="#courseService.GetTeachersForCourseReq">GetTeachersForCourseReq</a></td>
+                <td><a href="#courseService.GetTeachersForCourseRes">GetTeachersForCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>AddTeacherToCourse</td>
+                <td><a href="#courseService.TeacherForCourseReq">TeacherForCourseReq</a></td>
+                <td><a href="#courseService.TeacherForCourseRes">TeacherForCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>RemoveTeacherFromCourse</td>
+                <td><a href="#courseService.TeacherForCourseReq">TeacherForCourseReq</a></td>
+                <td><a href="#courseService.TeacherForCourseRes">TeacherForCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>CreateCourse</td>
+                <td><a href="#courseService.CreateCourseReq">CreateCourseReq</a></td>
+                <td><a href="#courseService.Course">Course</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>RenameCourse</td>
+                <td><a href="#courseService.RenameCourseReq">RenameCourseReq</a></td>
+                <td><a href="#courseService.Course">Course</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteCourse</td>
+                <td><a href="#courseService.DeleteCourseReq">DeleteCourseReq</a></td>
+                <td><a href="#courseService.DeleteCourseRes">DeleteCourseRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+      
+      <div class="file-heading">
+        <h2 id="rollCallService.proto">rollCallService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="rollCallService.Code">Code</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>rollCallId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>code</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.EndRollCallReq">EndRollCallReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>rollCallId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.EndRollCallRes">EndRollCallRes</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="rollCallService.ListRollCallsReq">ListRollCallsReq</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="rollCallService.ListRollCallsRes">ListRollCallsRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>rollCallIds</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.MarkAsPresentReq">MarkAsPresentReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>rollCallId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>studentId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.MarkAsPresentRes">MarkAsPresentRes</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="rollCallService.ReattachReq">ReattachReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>rollCallId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.StartRollCallReq">StartRollCallReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>courseId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>periodStart</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>periodEnd</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.ValidateRes">ValidateRes</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>valid</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>numValidCodes</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>markedAsPresent</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="rollCallService.RollCallService">RollCallService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>StartRollCall</td>
+                <td><a href="#rollCallService.StartRollCallReq">StartRollCallReq</a></td>
+                <td><a href="#rollCallService.Code">Code</a> stream</td>
+                <td><p>Teacher procedures</p></td>
+              </tr>
+            
+              <tr>
+                <td>EndRollCall</td>
+                <td><a href="#rollCallService.EndRollCallReq">EndRollCallReq</a></td>
+                <td><a href="#rollCallService.EndRollCallRes">EndRollCallRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ListRollCalls</td>
+                <td><a href="#rollCallService.ListRollCallsReq">ListRollCallsReq</a></td>
+                <td><a href="#rollCallService.ListRollCallsRes">ListRollCallsRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ReattachToRollCall</td>
+                <td><a href="#rollCallService.ReattachReq">ReattachReq</a></td>
+                <td><a href="#rollCallService.Code">Code</a> stream</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>MarkAsPresent</td>
+                <td><a href="#rollCallService.MarkAsPresentReq">MarkAsPresentReq</a></td>
+                <td><a href="#rollCallService.MarkAsPresentRes">MarkAsPresentRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ValidateCode</td>
+                <td><a href="#rollCallService.Code">Code</a></td>
+                <td><a href="#rollCallService.ValidateRes">ValidateRes</a></td>
+                <td><p>Student procedures</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
+    
+
+    <h2 id="scalar-value-types">Scalar Value Types</h2>
+    <table class="scalar-value-types-table">
+      <thead>
+        <tr><td>.proto Type</td><td>Notes</td><td>C++</td><td>Java</td><td>Python</td><td>Go</td><td>C#</td><td>PHP</td><td>Ruby</td></tr>
+      </thead>
+      <tbody>
+        
+          <tr id="double">
+            <td>double</td>
+            <td></td>
+            <td>double</td>
+            <td>double</td>
+            <td>float</td>
+            <td>float64</td>
+            <td>double</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="float">
+            <td>float</td>
+            <td></td>
+            <td>float</td>
+            <td>float</td>
+            <td>float</td>
+            <td>float32</td>
+            <td>float</td>
+            <td>float</td>
+            <td>Float</td>
+          </tr>
+        
+          <tr id="int32">
+            <td>int32</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="int64">
+            <td>int64</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="uint32">
+            <td>uint32</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int/long</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="uint64">
+            <td>uint64</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint32">
+            <td>sint32</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sint64">
+            <td>sint64</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="fixed32">
+            <td>fixed32</td>
+            <td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>uint32</td>
+            <td>uint</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="fixed64">
+            <td>fixed64</td>
+            <td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>uint64</td>
+            <td>ulong</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="sfixed32">
+            <td>sfixed32</td>
+            <td>Always four bytes.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>integer</td>
+            <td>Bignum or Fixnum (as required)</td>
+          </tr>
+        
+          <tr id="sfixed64">
+            <td>sfixed64</td>
+            <td>Always eight bytes.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>integer/string</td>
+            <td>Bignum</td>
+          </tr>
+        
+          <tr id="bool">
+            <td>bool</td>
+            <td></td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>boolean</td>
+            <td>bool</td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>TrueClass/FalseClass</td>
+          </tr>
+        
+          <tr id="string">
+            <td>string</td>
+            <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+            <td>string</td>
+            <td>String</td>
+            <td>str/unicode</td>
+            <td>string</td>
+            <td>string</td>
+            <td>string</td>
+            <td>String (UTF-8)</td>
+          </tr>
+        
+          <tr id="bytes">
+            <td>bytes</td>
+            <td>May contain any arbitrary sequence of bytes.</td>
+            <td>string</td>
+            <td>ByteString</td>
+            <td>str</td>
+            <td>[]byte</td>
+            <td>ByteString</td>
+            <td>string</td>
+            <td>String (ASCII-8BIT)</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>
+

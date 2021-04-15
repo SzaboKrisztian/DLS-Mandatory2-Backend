@@ -92,6 +92,7 @@ message GetTeachersForCourseRes {
 
 message TeacherForCourseReq {
     int32 courseId = 1;
+    int32 teacherId = 2;
 }
 
 message TeacherForCourseRes {}
@@ -135,7 +136,7 @@ message Person {
     string firstName = 2;
     string lastName = 3;
     repeated Course courses = 4;
-    optional int32 accountId = 5;
-    optional string email = 6;
+    int32 accountId = 5;
+    string email = 6;
 }
 
