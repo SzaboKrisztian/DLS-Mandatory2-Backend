@@ -13,7 +13,7 @@ import { LoginRequest } from "../../protoOutput/ts/authService/LoginRequest";
 import { LoginResponse } from "../../protoOutput/ts/authService/LoginResponse";
 import { LogoutResponse } from "../../protoOutput/ts/authService/LogoutResponse";
 import { GetUserResponse } from "../../protoOutput/ts/authService/GetUserResponse";
-import { ensureUser } from "../utils";
+import { ensureAccount, getUserForAccount } from "../utils";
 import { AccessToken, Student, Teacher } from "../entity";
 
 export const authHandlers: AuthServiceHandlers = {
@@ -86,10 +86,11 @@ export const authHandlers: AuthServiceHandlers = {
         call: grpc.ServerUnaryCall<Empty, GetUserResponse>,
         callback: grpc.sendUnaryData<GetUserResponse>
     ) {
-        const user = await ensureUser(call, callback);
-        if (!user) {
+        const account = await ensureAccount(call, callback);
+        if (!account) {
             return;
         }
+        const user = await getUserForAccount(account);
 
         const isTeacher = user instanceof Teacher;
         const isAdmin = Boolean((user as Teacher)?.admin);

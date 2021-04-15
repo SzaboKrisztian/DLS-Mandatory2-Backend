@@ -10,7 +10,7 @@ import { createConnection } from "typeorm";
 import { Student } from "./entity/Student";
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from '@grpc/proto-loader';
-import { ensureUser } from "./utils";
+import { ensureAccount, ensureAdmin } from "./utils";
 
 import { authServiceProto, authHandlers } from './services/authService';
 import { rollCallServiceProto, rollCallHandlers } from "./services/rollCallService";
@@ -32,9 +32,9 @@ const testServer: GrpcTestHandlers = {
         call: grpc.ServerUnaryCall<Request, Reply>,
         callback: grpc.sendUnaryData<Reply>
     ) {
-        const user = await ensureUser(call, callback);
-        if (!user) return;
-        console.info('TestAuth called with creds:', user);
+        const account = await ensureAccount(call, callback);
+        if (!account) return;
+        console.info('TestAuth called with creds:', account);
         callback(null, { message: `You sent: ${call.request.arg}`});
     },
 
@@ -42,9 +42,9 @@ const testServer: GrpcTestHandlers = {
         call: grpc.ServerUnaryCall<Request, Reply>,
         callback: grpc.sendUnaryData<Reply>
     ) {
-        const user = await ensureUser(call, callback, true);
-        if (!user) return;
-        console.info('TestAuthAdmin called with creds:', user);
+        const teacher = await ensureAdmin(call, callback);
+        if (!teacher) return;
+        console.info('TestAuthAdmin called with creds:', teacher.account);
         callback(null, { message: `You sent: ${call.request.arg}`});
     }
 }
@@ -64,23 +64,6 @@ function createServer() {
 if (require.main === module) {
     createConnection()
         .then(async (db) => {
-            // console.log("Inserting a new user into the database...");
-            // const user = new Student();
-            // user.firstName = "Timber";
-            // user.lastName = "Saw";
-            // await db.manager.save(user);
-            // console.log("Saved a new user with id: " + user.id);
-
-            // console.log("Loading users from the database...");
-            // const users = await db.manager.find(Student);
-            // console.log("Loaded users: ", users);
-
-            // console.log("Test:", JSON.stringify(await Student.findOne()));
-
-            // console.log(
-            //     "Here you can setup and run express/koa/any other framework."
-            // );
-
             const server = createServer();
             server.bindAsync('localhost:50051', grpc.ServerCredentials.createInsecure(), (err, port) => {
                 if (err) {

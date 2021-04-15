@@ -28,14 +28,15 @@ import { ListRollCallsRes }
 
 import { getManager } from "typeorm";
 import {
-    AccessToken,
     Course,
     RollCall,
     Presence,
-    Student,
-    Teacher,
 } from "../entity";
-import { ensureUser } from "../utils";
+import { ensureStudent, ensureTeacher } from "../utils";
+
+const CODE_EMIT_INTERVAL = parseInt(process.env.CODE_EMIT_INTERVAL, 10) || 2000;
+const NUM_VALID_CODES_REQUIRED = parseInt(process.env.NUM_VALID_CODES_REQUIRED, 10) || 3;
+const NUM_CODES_TO_CHECK = parseInt(process.env.NUM_CODES_TO_CHECK, 10) || 15;
 
 interface RollCallEntry {
     rollCall: RollCall,
@@ -68,7 +69,7 @@ setInterval(() => {
             console.log(`Teacher lost during roll call id=${key}.`);
             printActiveRollCalls();
         }});
-}, 2000);
+}, 666);
 
 function printActiveRollCalls() {
     console.log("--------------------\nActive roll calls:");
@@ -86,24 +87,20 @@ export const rollCallHandlers: RollCallServiceHandlers = {
     async StartRollCall(
         call: grpc.ServerWritableStream<StartRollCallReq, RpcCode>
     ) {
-        const manager = getManager();
-        const token = call.metadata.get('authorization')
-        const tokenEntry = await manager.findOne(AccessToken,
-            { where: { token }, relations: ["account"] });
-        const teacher = await manager.findOne(Teacher,
-            { where: { account: tokenEntry.account } });
-        const isAdmin = Boolean(teacher?.admin);
+        const teacher = await ensureTeacher(call);
+        if (!teacher) return;
 
         const { courseId, periodStart, periodEnd } = call.request;
         const periodStartDate = new Date(periodStart);
         const periodEndDate = new Date(periodEnd);
 
+        const manager = getManager();
         const course = await manager.findOne(Course, {
             where: { id: courseId },
             relations: ["teachers", "students"]
         });
 
-        if (!teacher || !course || (!isAdmin 
+        if (!teacher || !course || (!teacher.admin 
             && !course.teachers.find(t => t.id === teacher.id))) {
                 call.destroy({
                     code: grpc.status.PERMISSION_DENIED,
@@ -131,7 +128,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         if (dates.isBefore(periodEndDate, periodStartDate)
             // Admins are allowed to start a roll call for any date / period
             // Teacher are only allowed to start a roll call for that particular date
-            || (!isAdmin && (!dates.isSameDay(periodStartDate, new Date())
+            || (!teacher.admin && (!dates.isSameDay(periodStartDate, new Date())
             || !dates.isSameDay(periodStartDate, periodEndDate)))) {
                 call.destroy({
                     code: grpc.status.INVALID_ARGUMENT,
@@ -150,7 +147,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 code,
                 rollCallId: rollCall.id
             });
-        }, 2000);
+        }, CODE_EMIT_INTERVAL);
 
         rollCalls[rollCall.id] = {
             rollCall,
@@ -184,16 +181,17 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         call: grpc.ServerUnaryCall<EndRollCallReq, EndRollCallRes>,
         callback: grpc.sendUnaryData<Empty>
     ) {
-        const teacher = await ensureUser(call, callback, true) as Teacher;
+        const teacher = await ensureTeacher(call, callback);
         if (!teacher) return;
 
-        const manager = getManager();
-
         const { rollCallId } = call.request;
+        
+        const manager = getManager();
         const rollCall = await manager.findOne(RollCall, {
             where: { id: rollCallId },
             relations: ["course", "course.teachers"]
         });
+
         if (!rollCall) {
             callback({
                 code: grpc.status.INVALID_ARGUMENT,
@@ -201,26 +199,21 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             });
             return;
         }
-        if (rollCalls[rollCallId]) {
-            if (!teacher.admin && rollCalls[rollCallId].startedBy !== teacher.id) {
-                callback({
-                    code: grpc.status.PERMISSION_DENIED,
-                    message: "Not authorized to stop another teacher's roll call."
-                });
-                return;
-            }
+
+        if (!rollCall.course.teachers.find(t => t.id === teacher.id) && !teacher.admin) {
+            callback({
+                code: grpc.status.PERMISSION_DENIED,
+                message: "Not authorized to stop that roll call."
+            });
+            return;
+        }
+
+        if (rollCalls[rollCallId]) {    
             rollCalls[rollCallId].end();
             callback(null);
         } else {
             // The roll call can't be found in memory, so the
             // db entities should be closed manually
-            if (!rollCall.course.teachers.find(t => t.id === teacher.id) && !teacher.admin) {
-                callback({
-                    code: grpc.status.PERMISSION_DENIED,
-                    message: "Not authorized to stop another teacher's roll call."
-                });
-                return;
-            }
             rollCall.timeStopped = new Date();
             rollCall.save();
             callback(null);
@@ -230,21 +223,27 @@ export const rollCallHandlers: RollCallServiceHandlers = {
     async ReattachToRollCall(
         call: grpc.ServerWritableStream<ReattachReq, RpcCode>
     ) {
-        const manager = getManager();
-        const token = call.metadata.get('authorization')
-        const tokenEntry = await manager.findOne(AccessToken,
-            { where: { token }, relations: ["account"] });
-        const teacher = await manager.findOne(Teacher,
-            { where: { account: tokenEntry.account } });
-        const isAdmin = Boolean(teacher?.admin);
+        const teacher = await ensureTeacher(call);
+        if (!teacher) return;
+
         const { rollCallId } = call.request;
+
+        const manager = getManager();
         const rollCall = await manager.findOne(RollCall, {
             where: { id: rollCallId, timeStopped: null },
             relations: ["course", "course.teachers", "course.students"]
         });
         
+        if (rollCalls[rollCallId] !== undefined) {
+            call.destroy({
+                code: grpc.status.PERMISSION_DENIED,
+                message: "There is a teacher attached to this roll call."
+            } as any);
+            return;
+        }
+
         if (!teacher || !rollCall
-            || (!isAdmin && (rollCall.course.teachers.find(
+            || (!teacher.admin && (rollCall.course.teachers.find(
                 t => t.id === teacher.id
             ) === undefined))) {
             call.destroy({
@@ -267,7 +266,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 code,
                 rollCallId: rollCall.id
             });
-        }, 2000);
+        }, CODE_EMIT_INTERVAL);
 
         rollCalls[rollCall.id] = {
             rollCall,
@@ -306,8 +305,8 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         call: grpc.ServerUnaryCall<ListRollCallsReq, ListRollCallsRes>,
         callback: grpc.sendUnaryData<ListRollCallsRes>
     ) {
-        const user = await ensureUser(call, callback, true);
-        if (!user) return;
+        const teacher = await ensureTeacher(call, callback);
+        if (!teacher) return;
 
         const manager = getManager();
         const rollCalls = await manager.find(RollCall, {
@@ -315,9 +314,9 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             relations: ["course", "course.teachers"]
         });
 
-        if (!(user as Teacher).admin) {
+        if (!teacher.admin) {
             const filteredRcs = rollCalls.filter(rc =>
-                rc.course.teachers.find(t => t.id === user.id) !== undefined);
+                rc.course.teachers.find(t => t.id === teacher.id) !== undefined);
             callback(null, { rollCallIds: filteredRcs.map(rc => rc.id) });
         } else {
             callback(null, { rollCallIds: rollCalls.map(rc => rc.id) });
@@ -328,19 +327,12 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         call: grpc.ServerUnaryCall<RpcCode, ValidateRes>,
         callback: grpc.sendUnaryData<ValidateRes>
     ) {
+        const student = await ensureStudent(call, callback);
+        if (!student) return;
+
         const { code, rollCallId } = call.request;
         const manager = getManager();
         const rollCall = rollCalls[rollCallId].rollCall;
-
-        const student = await ensureUser(call, callback);
-        if (!student) return;
-        if (!(student instanceof Student)) {
-            callback({
-                code: grpc.status.PERMISSION_DENIED,
-                message: "Only students may respond to a roll call"
-            });
-            return;
-        }
 
         if (!rollCalls[rollCallId]) {
             callback({ code: grpc.status.INTERNAL, message: "Invalid roll call." });
@@ -362,7 +354,8 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         const codes = rollCalls[rollCallId].codes;
 
         if (myCodes.length === 0) {
-            const start = codes.length < 15 ? 0 : codes.length - 15;
+            const start = codes.length < NUM_CODES_TO_CHECK ? 0
+                : codes.length - NUM_CODES_TO_CHECK;
             const index = codes.indexOf(code, start);
             if (index === -1) {
                 callback(null, {
@@ -386,9 +379,9 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 callback(null, {
                     valid: true,
                     numValidCodes: numCorrect,
-                    markedAsPresent: numCorrect === 3
+                    markedAsPresent: numCorrect === NUM_VALID_CODES_REQUIRED
                 });
-                if (numCorrect === 3) {
+                if (numCorrect === NUM_VALID_CODES_REQUIRED) {
                     rollCalls[rollCallId].presences[student.id] = true;
                     delete codeSubmissions[rollCallId][student.id];
                     const presence = manager.create(Presence);
