@@ -2,20 +2,9 @@ import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import * as fs from "fs";
 import { ProtoGrpcType as AuthServiceType } from '../protoOutput/ts/authService';
-import { ProtoGrpcType as GrpcTestType } from '../protoOutput/ts/grpcTest';
 import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCallService";
 
 const SERVER_HOST = "localhost:50051";
-
-function getTestClient() {
-    const testPkg = protoLoader.loadSync(__dirname
-        + '/../proto/grpcTest.proto');
-    const testProto = (grpc.loadPackageDefinition(testPkg) as unknown) as GrpcTestType;
-    return new testProto.grpcTest.GrpcTest(
-        SERVER_HOST, 
-        grpc.credentials.createInsecure()
-    );
-}
 
 function getAuthClient() {
     const authPkg = protoLoader.loadSync(__dirname
@@ -76,34 +65,6 @@ if (process.argv.length > 2) {
                     console.log("Credentials written to file.");
                 }
             });
-            break;
-
-        case "echo1":
-        case "echo2":
-        case "echo3":
-            if (process.argv.length < 4) {
-                console.error("Too few arguments");
-                console.info("Usage: yarn run client echoX <name>");
-                process.exit(1);
-            }
-            const arg = process.argv[3];
-
-            const testClient = getTestClient();
-
-            function cb(err, res) {
-                if (err) {
-                    console.error(err);
-                } else {
-                    console.log(res.message);
-                }
-            }
-            if (action === "echo1") {
-                testClient.TestNoAuth({ arg }, metadata, cb);
-            } else if (action === "echo2") {
-                testClient.TestAuth({ arg }, metadata, cb);
-            } else {
-                testClient.TestAuthAdmin({ arg}, metadata, cb);
-            }
             break;
 
         case "startRollCall":
