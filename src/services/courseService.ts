@@ -172,11 +172,40 @@ export const courseHandlers: CourseServiceHandlers = {
     ) {
         const teacher = await ensureTeacher(call, callback);
         if (!teacher) return;
-        
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
+
+        const manager = getManager();
+        const { courseId } = call.request;
+        const course = await manager.findOne(Course, {
+            where: { id: courseId },
+            relations: ["students", "students.account", "students.courses"]
         });
+        if (!course) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: "Course not found"
+            });
+            return;
+        }
+
+        const students = course.students.map(s => {
+            return s.account === undefined ?
+            {
+                id: s.id,
+                firstName: s.firstName,
+                lastName: s.lastName,
+                courses: s.courses
+            } :
+            {
+                id: s.id,
+                firstName: s.firstName,
+                lastName: s.lastName,
+                courses: s.courses,
+                accountId: s.account.id,
+                email: s.account.email
+            }
+        });
+        
+        callback(null, { students });
     },
 
     async AddStudentToCourse(
@@ -185,11 +214,36 @@ export const courseHandlers: CourseServiceHandlers = {
     ) {
         const teacher = await ensureTeacher(call, callback);
         if (!teacher) return;
-        
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
+
+        const manager = getManager();
+
+        const { courseId, studentId } = call.request;
+        const course = await manager.findOne(Course, {
+            where: { id: courseId },
+            relations: ["students"]
         });
+        const student = await manager.findOne(Student, {
+            where: { id: studentId }
+        });
+
+        if (!course || !student) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: "Invalid student or course specified."
+            });
+        }
+
+        if (course.students.find(s => s.id === student.id)) {
+            callback({
+                code: grpc.status.INTERNAL,
+                message: "Student is already enrolled in that course."
+            });
+        }
+
+        course.students.push(student);
+        course.save();
+
+        callback(null);
     },
 
     async RemoveStudentFromCourse(
@@ -199,10 +253,33 @@ export const courseHandlers: CourseServiceHandlers = {
         const teacher = await ensureTeacher(call, callback);
         if (!teacher) return;
         
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
+        const manager = getManager();
+
+        const { courseId, studentId } = call.request;
+        const course = await manager.findOne(Course, {
+            where: { id: courseId },
+            relations: ["students"]
         });
+
+        if (!course) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: "Invalid course specified."
+            });
+        }
+
+        const index = course.students.findIndex(s => s.id === studentId);
+        if (index === -1) {
+            callback({
+                code: grpc.status.INTERNAL,
+                message: "Student is not enrolled in that course."
+            });
+        }
+
+        course.students.splice(index, 1);
+        course.save();        
+
+        callback(null);
     },
 
     async GetPresencesForCourse(

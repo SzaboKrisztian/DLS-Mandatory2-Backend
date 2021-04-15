@@ -205,17 +205,17 @@ if (process.argv.length > 2) {
             break;
 
         case "mycourses":
-            getCourseClient().GetMyCourses({}, metadata, logErrAndRes);
+            getCourseClient().GetMyCourses(null, metadata, logErrAndRes);
             break;
 
         case "allstudents":
-            getCourseClient().getAllStudents({}, metadata, logErrAndRes);
+            getCourseClient().getAllStudents(null, metadata, logErrAndRes);
             break;
 
         case "allcourses":
             getCourseClient().getAllCourses(null, metadata, logErrAndRes);
             break;
-            
+
         default:
             console.error("Invalid action");
     }
