@@ -29,7 +29,7 @@ proto.grpcTest = require('./grpcTest_pb.js');
 proto.grpcTest.GrpcTestClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
-  options['format'] = 'binary';
+  options['format'] = 'text';
 
   /**
    * @private @const {!grpc.web.GrpcWebClientBase} The client
@@ -55,7 +55,7 @@ proto.grpcTest.GrpcTestClient =
 proto.grpcTest.GrpcTestPromiseClient =
     function(hostname, credentials, options) {
   if (!options) options = {};
-  options['format'] = 'binary';
+  options['format'] = 'text';
 
   /**
    * @private @const {!grpc.web.GrpcWebClientBase} The client
