@@ -1,18 +1,14 @@
 // Original file: proto/courseService.proto
 
 
-export interface Presence {
+export interface MyPresence {
   'id'?: (number);
   'rollCallId'?: (number);
   'timestamp'?: (string);
-  'studentId'?: (number);
-  'teacherId'?: (number);
 }
 
-export interface Presence__Output {
+export interface MyPresence__Output {
   'id': (number);
   'rollCallId': (number);
   'timestamp': (string);
-  'studentId': (number);
-  'teacherId': (number);
 }

@@ -1,11 +1,11 @@
 // Original file: proto/courseService.proto
 
-import type { Presence as _courseService_Presence, Presence__Output as _courseService_Presence__Output } from '../courseService/Presence';
+import type { MyPresence as _courseService_MyPresence, MyPresence__Output as _courseService_MyPresence__Output } from '../courseService/MyPresence';
 
 export interface MyPresencesRes {
-  'presences'?: (_courseService_Presence)[];
+  'presences'?: (_courseService_MyPresence)[];
 }
 
 export interface MyPresencesRes__Output {
-  'presences': (_courseService_Presence__Output)[];
+  'presences': (_courseService_MyPresence__Output)[];
 }

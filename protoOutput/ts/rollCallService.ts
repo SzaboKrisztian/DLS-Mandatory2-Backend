@@ -14,6 +14,8 @@ export interface ProtoGrpcType {
     EndRollCallRes: MessageTypeDefinition
     ListRollCallsReq: MessageTypeDefinition
     ListRollCallsRes: MessageTypeDefinition
+    MarkAsPresentReq: MessageTypeDefinition
+    MarkAsPresentRes: MessageTypeDefinition
     ReattachReq: MessageTypeDefinition
     RollCallService: SubtypeConstructor<typeof grpc.Client, _rollCallService_RollCallServiceClient> & { service: ServiceDefinition }
     StartRollCallReq: MessageTypeDefinition

@@ -2,7 +2,6 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import * as dates from "date-fns";
-import * as util from "util";
 import { v4 as generateUuid } from 'uuid';
 
 import { RollCallServiceHandlers }
@@ -25,12 +24,17 @@ import { ListRollCallsReq }
     from "../../protoOutput/ts/rollCallService/ListRollCallsReq";
 import { ListRollCallsRes }
     from "../../protoOutput/ts/rollCallService/ListRollCallsRes";
+import { MarkAsPresentReq }
+    from "../../protoOutput/ts/rollCallService/MarkAsPresentReq";
+import { MarkAsPresentRes }
+    from "../../protoOutput/ts/rollCallService/MarkAsPresentRes";
 
 import { getManager } from "typeorm";
 import {
     Course,
     RollCall,
     Presence,
+    Teacher
 } from "../entity";
 import { ensureStudent, ensureTeacher } from "../utils";
 
@@ -42,7 +46,7 @@ interface RollCallEntry {
     rollCall: RollCall,
     presences: { [studentId: string]: boolean }
     courseId: number,
-    startedBy: number,
+    startedBy: Teacher,
     codes: string[],
     interval: NodeJS.Timer | null,
     call: grpc.ServerWritableStream<StartRollCallReq, RpcCode> | grpc.ServerWritableStream<ReattachReq, RpcCode>,
@@ -75,7 +79,7 @@ function printActiveRollCalls() {
     console.log("--------------------\nActive roll calls:");
     if (Object.keys(rollCalls).length > 0) {
         Object.keys(rollCalls).forEach(k => {
-            console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy}`);
+            console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy.id}`);
         });
     } else {
         console.log("None.");
@@ -156,7 +160,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             call,
             interval,
             codes: [],
-            startedBy: teacher.id,
+            startedBy: teacher,
             end: () => {
                 call.end();
                 clearInterval(interval);
@@ -254,7 +258,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         }
 
         const oldEntry = rollCalls[rollCall.id];
-        const author = oldEntry ? oldEntry.startedBy : teacher.id;
+        const author = oldEntry ? oldEntry.startedBy : teacher;
         if (oldEntry) {
             clearInterval(oldEntry.interval);
         }
@@ -387,6 +391,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                     const presence = manager.create(Presence);
                     presence.rollCall = rollCall;
                     presence.student = student;
+                    presence.markedBy = rollCalls[rollCallId].startedBy;
                     presence.save();
                 }
             } else {
@@ -398,6 +403,54 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 });
             }
         }
+    },
+
+    async MarkAsPresent(
+        call: grpc.ServerUnaryCall<MarkAsPresentReq, MarkAsPresentRes>,
+        callback: grpc.sendUnaryData<MarkAsPresentRes>
+    ) {
+        const teacher = await ensureTeacher(call, callback);
+        if (!teacher) return;
+
+        const { rollCallId, studentId } = call.request;
+
+        const manager = getManager();
+        const rollCall = await manager.findOne(RollCall, {
+            where: { id: rollCallId },
+            relations: ["course", "course.teachers", "course.students"]
+        });
+        if (!rollCall) {
+            callback({
+                code: grpc.status.INVALID_ARGUMENT,
+                message: 'Invalid rollCallId'
+            });
+            return;
+        }
+
+        const student = rollCall.course.students.find(s => s.id === studentId);
+        if (!student) {
+            callback({
+                code: grpc.status.INVALID_ARGUMENT,
+                message: 'Invalid studentId'
+            });
+            return;
+        }
+
+        if (!teacher.admin && !rollCall.course.teachers.find(t => t.id === teacher.id)) {
+            callback({
+                code: grpc.status.PERMISSION_DENIED,
+                message: 'Not authorized to mark presences on that course.'
+            });
+            return;
+        }
+
+        const presence = manager.create(Presence);
+        presence.rollCall = rollCall;
+        presence.student = student;
+        presence.markedBy = teacher;
+        presence.save();
+
+        callback(null);
     }
 }
 

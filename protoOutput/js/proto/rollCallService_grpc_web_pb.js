@@ -383,6 +383,86 @@ proto.rollCallService.RollCallServicePromiseClient.prototype.reattachToRollCall 
 /**
  * @const
  * @type {!grpc.web.MethodDescriptor<
+ *   !proto.rollCallService.MarkAsPresentReq,
+ *   !proto.rollCallService.MarkAsPresentRes>}
+ */
+const methodDescriptor_RollCallService_MarkAsPresent = new grpc.web.MethodDescriptor(
+  '/rollCallService.RollCallService/MarkAsPresent',
+  grpc.web.MethodType.UNARY,
+  proto.rollCallService.MarkAsPresentReq,
+  proto.rollCallService.MarkAsPresentRes,
+  /**
+   * @param {!proto.rollCallService.MarkAsPresentReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.rollCallService.MarkAsPresentRes.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.rollCallService.MarkAsPresentReq,
+ *   !proto.rollCallService.MarkAsPresentRes>}
+ */
+const methodInfo_RollCallService_MarkAsPresent = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.rollCallService.MarkAsPresentRes,
+  /**
+   * @param {!proto.rollCallService.MarkAsPresentReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.rollCallService.MarkAsPresentRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.rollCallService.MarkAsPresentReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.rollCallService.MarkAsPresentRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.rollCallService.MarkAsPresentRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.rollCallService.RollCallServiceClient.prototype.markAsPresent =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/rollCallService.RollCallService/MarkAsPresent',
+      request,
+      metadata || {},
+      methodDescriptor_RollCallService_MarkAsPresent,
+      callback);
+};
+
+
+/**
+ * @param {!proto.rollCallService.MarkAsPresentReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.rollCallService.MarkAsPresentRes>}
+ *     Promise that resolves to the response
+ */
+proto.rollCallService.RollCallServicePromiseClient.prototype.markAsPresent =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/rollCallService.RollCallService/MarkAsPresent',
+      request,
+      metadata || {},
+      methodDescriptor_RollCallService_MarkAsPresent);
+};
+
+
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
  *   !proto.rollCallService.Code,
  *   !proto.rollCallService.ValidateRes>}
  */

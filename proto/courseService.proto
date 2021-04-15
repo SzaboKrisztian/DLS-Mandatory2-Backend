@@ -3,8 +3,28 @@ syntax = "proto3";
 package courseService;
 
 service CourseService {
+    // Common procedures
     rpc GetMyCourses(MyCoursesReq) returns (MyCoursesRes);
+
+    // Student procedures
     rpc GeyMyPresences(MyPresencesReq) returns (MyPresencesRes);
+
+    // Teacher procedures
+    rpc GetAllStudents(AllStudentsReq) returns (AllStudentsRes);
+    rpc GetStudentsForCourse(StudentsForCourseReq) returns (StudentsForCourseRes);
+    rpc AddStudentToCourse(StudentToCourseReq) returns (StudentToCourseRes);
+    rpc RemoveStudentFromCourse(StudentToCourseReq) returns (StudentToCourseRes);
+    rpc GetPresencesForCourse(PresencesForCourseReq) returns (PresencesForCourseRes);
+
+    // Admin procedures
+    rpc GetAllCourses(AllCoursesReq) returns (AllCoursesRes);
+    rpc GetAllTeachers(AllTeachersReq) returns (AllTeachersRes);
+    rpc GetTeachersForCourse(GetTeachersForCourseReq) returns (GetTeachersForCourseRes);
+    rpc AddTeacherToCourse(TeacherForCourseReq) returns (TeacherForCourseRes);
+    rpc RemoveTeacherFromCourse(TeacherForCourseReq) returns (TeacherForCourseRes);
+    rpc CreateCourse(CreateCourseReq) returns (Course);
+    rpc RenameCourse(RenameCourseReq) returns (Course);
+    rpc DeleteCourse(DeleteCourseReq) returns (DeleteCourseRes);
 }
 
 message MyCoursesReq {}
@@ -18,16 +38,104 @@ message MyPresencesReq {
 }
 
 message MyPresencesRes {
+    repeated MyPresence presences = 1;
+}
+
+message AllStudentsReq {}
+
+message AllStudentsRes {
+    repeated Person students = 1;
+}
+
+message StudentsForCourseReq {
+    int32 courseId = 1;
+}
+
+message StudentsForCourseRes {
+    repeated Person students = 1;
+}
+
+message StudentToCourseReq {
+    int32 studentId = 1;
+    int32 courseId = 2;
+}
+
+message StudentToCourseRes {}
+
+message PresencesForCourseReq {
+    int32 courseId = 1;
+}
+
+message PresencesForCourseRes {
     repeated Presence presences = 1;
+}
+
+message AllCoursesReq {}
+
+message AllCoursesRes {
+    repeated Course courses = 1;
+}
+
+message AllTeachersReq {}
+
+message AllTeachersRes {
+    repeated Person teachers = 1;
+}
+
+message GetTeachersForCourseReq {
+    int32 courseId = 1;
+}
+
+message GetTeachersForCourseRes {
+    repeated Person teachers = 1;
+}
+
+message TeacherForCourseReq {
+    int32 courseId = 1;
+}
+
+message TeacherForCourseRes {}
+
+message CreateCourseReq {
+    string name = 1;
+}
+
+message RenameCourseReq {
+    int32 courseId = 1;
+    string name = 2;
+}
+
+message DeleteCourseReq {
+    int32 courseId = 1;
+}
+
+message DeleteCourseRes {}
+
+message MyPresence {
+    int32 id = 1;
+    int32 rollCallId = 2;
+    string timestamp = 3;
 }
 
 message Presence {
     int32 id = 1;
     int32 rollCallId = 2;
     string timestamp = 3;
+    int32 studentId = 4;
+    int32 teacherId = 5;
 }
 
 message Course {
     int32 id = 1;
     string name = 2;
 }
+
+message Person {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    repeated Course courses = 4;
+    optional int32 accountId = 5;
+    optional string email = 6;
+}
+

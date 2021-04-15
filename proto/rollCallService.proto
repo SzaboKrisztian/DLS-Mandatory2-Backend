@@ -8,6 +8,7 @@ service RollCallService {
     rpc EndRollCall(EndRollCallReq) returns (EndRollCallRes);
     rpc ListRollCalls(ListRollCallsReq) returns (ListRollCallsRes);
     rpc ReattachToRollCall(ReattachReq) returns (stream Code);
+    rpc MarkAsPresent(MarkAsPresentReq) returns (MarkAsPresentRes);
 
     // Student procedures
     rpc ValidateCode(Code) returns (ValidateRes);
@@ -45,4 +46,11 @@ message ValidateRes {
     int32 numValidCodes = 2;
     bool markedAsPresent = 3;
 }
+
+message MarkAsPresentReq {
+    int32 rollCallId = 1;
+    int32 studentId = 2;
+}
+
+message MarkAsPresentRes {}
 
