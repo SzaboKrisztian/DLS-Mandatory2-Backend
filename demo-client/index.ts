@@ -134,6 +134,9 @@ if (process.argv.length > 2) {
             call.on('end', function() {
                 console.log("Stream ended");
             });
+            call.on('status', function(status) {
+                console.log("Status: ", status);
+            });
             break;
 
         case "endRollCall":
@@ -164,6 +167,9 @@ if (process.argv.length > 2) {
                 });
                 call2.on('end', function() {
                     console.log("Stream ended");
+                });
+                call2.on('status', function(status) {
+                    console.log("Status: ", status);
                 });
             }
             break;

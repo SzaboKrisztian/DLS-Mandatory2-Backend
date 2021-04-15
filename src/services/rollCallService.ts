@@ -62,11 +62,25 @@ const codeSubmissions: {
 setInterval(() => {
     Object.keys(rollCalls).forEach(key => {
         if (rollCalls[key].call.cancelled) {
-            console.log("Teacher lost during roll call. Suspending code generation.");
             clearInterval(rollCalls[key].interval);
             delete rollCalls[key];
+            delete codeSubmissions[key];
+            console.log(`Teacher lost during roll call id=${key}.`);
+            printActiveRollCalls();
         }});
 }, 2000);
+
+function printActiveRollCalls() {
+    console.log("--------------------\nActive roll calls:");
+    if (Object.keys(rollCalls).length > 0) {
+        Object.keys(rollCalls).forEach(k => {
+            console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy}`);
+        });
+    } else {
+        console.log("None.");
+    }
+    console.log("--------------------\n");
+}
 
 export const rollCallHandlers: RollCallServiceHandlers = {
     async StartRollCall(
@@ -88,6 +102,16 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             where: { id: courseId },
             relations: ["teachers", "students"]
         });
+
+        if (!teacher || !course || (!isAdmin 
+            && !course.teachers.find(t => t.id === teacher.id))) {
+                call.destroy({
+                    code: grpc.status.PERMISSION_DENIED,
+                    message: "Not allowed to start roll call for that course."
+                } as any);
+                return;
+        }
+
         // Try to find a non-terminated roll call for courseId
         const found = await manager.findOne(RollCall, {
             where: {
@@ -95,17 +119,25 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 timeStopped: null
             }
         });
-        
-        // Admins are allowed to start a roll call for any date / period
-        // Teacher are only allowed to start a roll call for that particular date
-        if (!teacher || !course || dates.isBefore(periodEndDate, periodStartDate)
-            || found !== undefined 
-            // If the teacher is not an admin, the teacher must be teaching that course
-            || (!isAdmin && !course.teachers.find(t => t.id === teacher.id)
-                || !dates.isSameDay(periodStartDate, new Date())
-                || !dates.isSameDay(periodStartDate, periodEndDate))) {
-            call.end();
+        if (found !== undefined) {
+            call.destroy({
+                code: grpc.status.PERMISSION_DENIED,
+                message: "There's another active roll call for this course."
+            } as any);
             return;
+        }
+        
+        
+        if (dates.isBefore(periodEndDate, periodStartDate)
+            // Admins are allowed to start a roll call for any date / period
+            // Teacher are only allowed to start a roll call for that particular date
+            || (!isAdmin && (!dates.isSameDay(periodStartDate, new Date())
+            || !dates.isSameDay(periodStartDate, periodEndDate)))) {
+                call.destroy({
+                    code: grpc.status.INVALID_ARGUMENT,
+                    message: "Invalid arguments."
+                } as any);
+                return;
         }
 
         const rollCall = manager.create(RollCall, { course, periodStart, periodEnd });
@@ -135,14 +167,8 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 delete codeSubmissions[rollCall.id];
                 rollCall.timeStopped = new Date();
                 rollCall.save();
-                console.log(`Roll call id=${rollCall.id} stopped. Active roll calls:`);
-                if (Object.keys(rollCalls).length > 0) {
-                    Object.keys(rollCalls).forEach(k => {
-                        console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy}`);
-                    });
-                } else {
-                    console.log("None.");
-                }
+                console.log(`Roll call id=${rollCall.id} stopped.`);
+                printActiveRollCalls();
             }
         }
 
@@ -150,14 +176,8 @@ export const rollCallHandlers: RollCallServiceHandlers = {
 
         codeSubmissions[rollCall.id] = {};
 
-        console.log(`Roll call id=${rollCall.id} started. Active roll calls:`);
-        if (Object.keys(rollCalls).length > 0) {
-            Object.keys(rollCalls).forEach(k => {
-                console.log(`id: ${k}, courseId: ${rollCalls[k].courseId}, startedBy: ${rollCalls[k].startedBy}`);
-            });
-        } else {
-            console.log("None.");
-        }
+        console.log(`Roll call id=${rollCall.id} started.`);
+        printActiveRollCalls();
     },
 
     async EndRollCall(
@@ -219,7 +239,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         const isAdmin = Boolean(teacher?.admin);
         const { rollCallId } = call.request;
         const rollCall = await manager.findOne(RollCall, {
-            where: { id: rollCallId },
+            where: { id: rollCallId, timeStopped: null },
             relations: ["course", "course.teachers", "course.students"]
         });
         
@@ -227,9 +247,12 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             || (!isAdmin && (rollCall.course.teachers.find(
                 t => t.id === teacher.id
             ) === undefined))) {
-            call.end();
+            call.destroy({
+                code: grpc.status.PERMISSION_DENIED,
+                message: "Invalid roll call."
+            } as any);
             return;
-        }       
+        }
 
         const oldEntry = rollCalls[rollCall.id];
         const author = oldEntry ? oldEntry.startedBy : teacher.id;
@@ -261,12 +284,8 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                 delete codeSubmissions[rollCall.id];
                 rollCall.timeStopped = new Date();
                 rollCall.save();
-                console.log(`Roll call id=${rollCall.id} stopped:`);
-                console.log(util.inspect(rollCalls, {
-                    showHidden: false,
-                    depth: 1,
-                    colors: true
-                }));
+                console.log(`Roll call id=${rollCall.id} stopped.`);
+                printActiveRollCalls();
             }
         };
 
@@ -279,12 +298,8 @@ export const rollCallHandlers: RollCallServiceHandlers = {
 
         codeSubmissions[rollCall.id] = {};
 
-        console.log(`Reattached to roll call id=${rollCall.id}:`);
-        console.log(util.inspect(rollCalls, {
-            showHidden: false,
-            depth: 1,
-            colors: true
-        }));
+        console.log(`Reattached to roll call id=${rollCall.id}.`);
+        printActiveRollCalls();
     },
 
     async ListRollCalls(
