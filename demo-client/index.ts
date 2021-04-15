@@ -156,13 +156,7 @@ if (process.argv.length > 2) {
             break;
 
         case "list":
-            getRollCallClient().ListRollCalls(null, metadata, (err, res) => {
-                if (err) {
-                    console.error(err);
-                } else if (res) {
-                    console.log(res);
-                }
-            });
+            getRollCallClient().ListRollCalls(null, metadata, logErrAndRes);
             break;
 
         case "whoami":
@@ -214,6 +208,14 @@ if (process.argv.length > 2) {
             getCourseClient().GetMyCourses({}, metadata, logErrAndRes);
             break;
 
+        case "allstudents":
+            getCourseClient().getAllStudents({}, metadata, logErrAndRes);
+            break;
+
+        case "allcourses":
+            getCourseClient().getAllCourses(null, metadata, logErrAndRes);
+            break;
+            
         default:
             console.error("Invalid action");
     }

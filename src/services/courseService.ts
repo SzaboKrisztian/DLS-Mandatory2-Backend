@@ -71,6 +71,7 @@ import {
     ensureTeacher,
     ensureAdmin,
 } from "../utils";
+import { sign } from "jsonwebtoken";
 
 export const courseHandlers: CourseServiceHandlers = {
 
@@ -139,12 +140,30 @@ export const courseHandlers: CourseServiceHandlers = {
         const teacher = await ensureTeacher(call, callback);
         if (!teacher) return;
 
-        
-
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
+        const manager = getManager();
+        const students = await manager.find(Student, {
+            relations: ["account", "courses"]
         });
+
+        const result = students.map(s => {
+            return s.account === undefined ?
+            {
+                id: s.id,
+                firstName: s.firstName,
+                lastName: s.lastName,
+                courses: s.courses
+            } :
+            {
+                id: s.id,
+                firstName: s.firstName,
+                lastName: s.lastName,
+                courses: s.courses,
+                accountId: s.account.id,
+                email: s.account.email
+            }
+        });
+
+        callback(null, { students: result });
     },
 
     async GetStudentsForCourse(
@@ -207,11 +226,11 @@ export const courseHandlers: CourseServiceHandlers = {
     ) {
         const teacher = await ensureAdmin(call, callback);
         if (!teacher) return;
+
+        const manager = getManager();
+        const courses = await manager.find(Course);
         
-        callback({
-            code: grpc.status.UNIMPLEMENTED,
-            message: "RPC not implemented yet."
-        });
+        callback(null, { courses });
     },
 
     async GetAllTeachers(
