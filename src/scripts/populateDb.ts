@@ -26,9 +26,10 @@ async function populateDb(
         // in the case of a new teacher) the original array, thus
         // creating a chance for them to be chosen again.
         if (allTeachers.length > 0 && Math.random() > 0.33) {
+            const index = randInt(allTeachers.length);
             return Math.random() < 0.15
-                ? allTeachers[randInt[allTeachers.length]]
-                : allTeachers.splice(randInt(allTeachers.length), 1)[0]
+                ? allTeachers[index]
+                : allTeachers.splice(index, 1)[0];
         } else {
             const teacher = await teacherRepo.create(
                 faker.name.firstName(),
@@ -60,6 +61,8 @@ async function populateDb(
                 "1234"));
         }
 
+        console.log(`Created ${studentGroup.length} students.`);
+
         for (let crs = 0; crs < numCourses; crs += 1) {
             const course = db.manager.create(Course);
             course.name = faker.random.words(randInt(1, 4));
@@ -79,6 +82,8 @@ async function populateDb(
             }
             await course.save();
         }
+
+        console.log(` - added them to ${numCourses} courses.`);
     }
 }
 
