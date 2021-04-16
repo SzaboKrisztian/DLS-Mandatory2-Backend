@@ -216,6 +216,33 @@ if (process.argv.length > 2) {
             getCourseClient().getAllCourses(null, metadata, logErrAndRes);
             break;
 
+        case "allteachers":
+            getCourseClient().GetAllTeachers(null, metadata, logErrAndRes);
+            break;
+
+        case "courseTeachers":
+        case "courseStudents":
+            if (process.argv.length < 4) {
+                console.error("Not enough arguemnts supplied");
+                console.error(`yarn run client ${action} <courseId>`);
+                process.exit(1);
+            }
+            
+            const cId = parseInt(process.argv[3], 10);
+            if (Number.isNaN(cId)) {
+                console.error("Invalid courseId provided.");
+                process.exit(1);
+            }
+
+            if (action === "courseStudents") {
+                getCourseClient().GetStudentsForCourse(
+                    { courseId: cId }, metadata, logErrAndRes);
+            } else {
+                getCourseClient().GetTeachersForCourse(
+                    { courseId: cId }, metadata, logErrAndRes);
+            }
+            break;
+
         default:
             console.error("Invalid action");
     }

@@ -8,6 +8,7 @@ import {
     ManyToMany,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
     OneToMany
 } from "typeorm";
 import { Account, Course, Presence } from "./";
@@ -38,4 +39,7 @@ export class Student extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }

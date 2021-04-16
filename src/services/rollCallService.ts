@@ -336,12 +336,12 @@ export const rollCallHandlers: RollCallServiceHandlers = {
 
         const { code, rollCallId } = call.request;
         const manager = getManager();
-        const rollCall = rollCalls[rollCallId].rollCall;
-
+        
         if (!rollCalls[rollCallId]) {
             callback({ code: grpc.status.INTERNAL, message: "Invalid roll call." });
             return;
         }
+        const rollCall = rollCalls[rollCallId].rollCall;
 
         if (rollCalls[rollCallId].presences[student.id] !== false) {
             callback({

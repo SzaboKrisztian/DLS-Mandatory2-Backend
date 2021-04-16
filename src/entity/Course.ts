@@ -7,6 +7,7 @@ import {
     JoinTable,
     CreateDateColumn,
     UpdateDateColumn,
+    DeleteDateColumn,
     OneToMany
 } from "typeorm";
 import { RollCall, Student, Teacher } from "./";
@@ -35,4 +36,7 @@ export class Course extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
