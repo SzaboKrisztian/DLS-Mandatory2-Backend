@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package accountService;
+
+// All rpcs are admin-only
+service AccountService {
+    rpc CreateStudent(CreateData) returns (Person);
+    rpc UpdateStudent(UpdateData) returns (Person);
+    rpc DeleteStudent(DeleteReq) returns (DeleteRes);
+
+    rpc CreateTeacher(CreateData) returns (Person);
+    rpc UpdateTeacher(UpdateData) returns (Person);
+    rpc DeleteTeacher(DeleteReq) returns (DeleteRes);
+
+    rpc ResetPassword(ResetPassReq) returns (ResetPassRes);
+}
+
+message CreateData {
+    string firstName = 1;
+    string lastName = 2;
+    string email = 3;
+    string password = 4;
+}
+
+message UpdateData {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    string email = 4;
+}
+
+message DeleteReq {
+    int32 id = 1;
+}
+
+message DeleteRes {}
+
+message ResetPassReq {
+    int32 accountId = 1;
+    string newPass = 2;
+}
+
+message ResetPassRes {}
+
+message Person {
+    int32 id = 1;
+    string firstName = 2;
+    string lastName = 3;
+    repeated Course courses = 4;
+    int32 accountId = 5;
+    string email = 6;
+}
+
+message Course {
+    int32 id = 1;
+    string name = 2;
+}

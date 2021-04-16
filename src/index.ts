@@ -12,6 +12,7 @@ import * as grpc from "@grpc/grpc-js";
 import { authServiceProto, authHandlers } from './services/authService';
 import { rollCallServiceProto, rollCallHandlers } from "./services/rollCallService";
 import { courseServiceProto, courseHandlers } from "./services/courseService";
+import { accoutServiceProto, accountHandlers } from "./services/accountService";
 
 function createServer() {
     const server = new grpc.Server();
@@ -27,6 +28,10 @@ function createServer() {
     server.addService(
         courseServiceProto.courseService.CourseService.service,
         courseHandlers
+    );
+    server.addService(
+        accoutServiceProto.accountService.AccountService.service,
+        accountHandlers
     );
 
     return server;

@@ -175,6 +175,53 @@
         
           
           <li>
+            <a href="#accountService.proto">accountService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#accountService.Course"><span class="badge">M</span>Course</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.CreateData"><span class="badge">M</span>CreateData</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.DeleteReq"><span class="badge">M</span>DeleteReq</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.DeleteRes"><span class="badge">M</span>DeleteRes</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.Person"><span class="badge">M</span>Person</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.ResetPassReq"><span class="badge">M</span>ResetPassReq</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.ResetPassRes"><span class="badge">M</span>ResetPassRes</a>
+                </li>
+              
+                <li>
+                  <a href="#accountService.UpdateData"><span class="badge">M</span>UpdateData</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#accountService.AccountService"><span class="badge">S</span>AccountService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
             <a href="#authService.proto">authService.proto</a>
             <ul>
               
@@ -398,6 +445,330 @@
       </ul>
     </div>
 
+    
+      
+      <div class="file-heading">
+        <h2 id="accountService.proto">accountService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="accountService.Course">Course</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>name</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="accountService.CreateData">CreateData</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>firstName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>password</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="accountService.DeleteReq">DeleteReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="accountService.DeleteRes">DeleteRes</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="accountService.Person">Person</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>firstName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>courses</td>
+                  <td><a href="#accountService.Course">Course</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="accountService.ResetPassReq">ResetPassReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accountId</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>newPass</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="accountService.ResetPassRes">ResetPassRes</h3>
+        <p></p>
+
+        
+
+        
+      
+        <h3 id="accountService.UpdateData">UpdateData</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>firstName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="accountService.AccountService">AccountService</h3>
+        <p>All rpcs are admin-only</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>CreateStudent</td>
+                <td><a href="#accountService.CreateData">CreateData</a></td>
+                <td><a href="#accountService.Person">Person</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>UpdateStudent</td>
+                <td><a href="#accountService.UpdateData">UpdateData</a></td>
+                <td><a href="#accountService.Person">Person</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteStudent</td>
+                <td><a href="#accountService.DeleteReq">DeleteReq</a></td>
+                <td><a href="#accountService.DeleteRes">DeleteRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>CreateTeacher</td>
+                <td><a href="#accountService.CreateData">CreateData</a></td>
+                <td><a href="#accountService.Person">Person</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>UpdateTeacher</td>
+                <td><a href="#accountService.UpdateData">UpdateData</a></td>
+                <td><a href="#accountService.Person">Person</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>DeleteTeacher</td>
+                <td><a href="#accountService.DeleteReq">DeleteReq</a></td>
+                <td><a href="#accountService.DeleteRes">DeleteRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ResetPassword</td>
+                <td><a href="#accountService.ResetPassReq">ResetPassReq</a></td>
+                <td><a href="#accountService.ResetPassRes">ResetPassRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+
+        
     
       
       <div class="file-heading">

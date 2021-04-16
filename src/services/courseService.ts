@@ -71,7 +71,6 @@ import {
     ensureTeacher,
     ensureAdmin,
 } from "../utils";
-import { sign } from "jsonwebtoken";
 
 export const courseHandlers: CourseServiceHandlers = {
 
@@ -548,5 +547,4 @@ const packageDef = protoLoader.loadSync(
     __dirname + "/../../proto/courseService.proto"
 );
 export const courseServiceProto = (grpc.loadPackageDefinition(
-    packageDef
-) as unknown) as CourseServiceType;
+    packageDef) as unknown) as CourseServiceType;

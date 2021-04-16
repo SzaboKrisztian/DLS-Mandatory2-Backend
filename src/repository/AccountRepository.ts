@@ -28,4 +28,15 @@ export class AccountRepository extends AbstractRepository<Account> {
         });
     }
 
+    async changePassword(accountId: number, newPassword: string) {
+        const account = await this.manager.findOne(Account, {
+            where: { id: accountId }
+        });
+        if (!account) {
+            throw new Error("Account not found.");
+        }
+        account.password = await bcrypt.hash(newPassword, saltRounds);
+        await account.save();
+    }
+
 }

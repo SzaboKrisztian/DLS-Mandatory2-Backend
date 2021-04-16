@@ -4,6 +4,7 @@ import * as fs from "fs";
 import { ProtoGrpcType as AuthServiceType } from '../protoOutput/ts/authService';
 import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCallService";
 import { ProtoGrpcType as CourseServiceType } from "../protoOutput/ts/courseService";
+import { ProtoGrpcType as AccountServiceType } from "../protoOutput/ts/accountService";
 
 const SERVER_HOST = "localhost:50051";
 
@@ -33,6 +34,16 @@ function getCourseClient() {
     const courseProto = (grpc.loadPackageDefinition(coursePkg) as unknown) as CourseServiceType;
     return new courseProto.courseService.CourseService(
         SERVER_HOST, 
+        grpc.credentials.createInsecure()
+    );
+}
+
+function getAccountClient() {
+    const accountPkg = protoLoader.loadSync(__dirname
+        + '/../proto/accountService.proto');
+    const accountProto = (grpc.loadPackageDefinition(accountPkg) as unknown) as AccountServiceType;
+    return new accountProto.accountService.AccountService(
+        SERVER_HOST,
         grpc.credentials.createInsecure()
     );
 }
@@ -241,6 +252,15 @@ if (process.argv.length > 2) {
                 getCourseClient().GetTeachersForCourse(
                     { courseId: cId }, metadata, logErrAndRes);
             }
+            break;
+
+        case "test":
+            getAccountClient().UpdateStudent({
+                firstName: "test",
+                email: "more test",
+                lastName: undefined,
+                password: null
+            }, metadata, logErrAndRes);
             break;
 
         default:
