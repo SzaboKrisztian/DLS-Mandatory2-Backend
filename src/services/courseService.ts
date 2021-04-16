@@ -208,80 +208,6 @@ export const courseHandlers: CourseServiceHandlers = {
         callback(null, { students });
     },
 
-    async AddStudentToCourse(
-        call: grpc.ServerUnaryCall<StudentToCourseReq, StudentToCourseRes>,
-        callback: grpc.sendUnaryData<StudentToCourseRes>
-    ) {
-        const teacher = await ensureTeacher(call, callback);
-        if (!teacher) return;
-
-        const manager = getManager();
-
-        const { courseId, studentId } = call.request;
-        const course = await manager.findOne(Course, {
-            where: { id: courseId },
-            relations: ["students"]
-        });
-        const student = await manager.findOne(Student, {
-            where: { id: studentId }
-        });
-
-        if (!course || !student) {
-            callback({
-                code: grpc.status.NOT_FOUND,
-                message: "Invalid student or course specified."
-            });
-        }
-
-        if (course.students.find(s => s.id === student.id)) {
-            callback({
-                code: grpc.status.INTERNAL,
-                message: "Student is already enrolled in that course."
-            });
-        }
-
-        course.students.push(student);
-        course.save();
-
-        callback(null);
-    },
-
-    async RemoveStudentFromCourse(
-        call: grpc.ServerUnaryCall<StudentToCourseReq, StudentToCourseRes>,
-        callback: grpc.sendUnaryData<StudentToCourseRes>
-    ) {
-        const teacher = await ensureTeacher(call, callback);
-        if (!teacher) return;
-        
-        const manager = getManager();
-
-        const { courseId, studentId } = call.request;
-        const course = await manager.findOne(Course, {
-            where: { id: courseId },
-            relations: ["students"]
-        });
-
-        if (!course) {
-            callback({
-                code: grpc.status.NOT_FOUND,
-                message: "Invalid course specified."
-            });
-        }
-
-        const index = course.students.findIndex(s => s.id === studentId);
-        if (index === -1) {
-            callback({
-                code: grpc.status.INTERNAL,
-                message: "Student is not enrolled in that course."
-            });
-        }
-
-        course.students.splice(index, 1);
-        course.save();        
-
-        callback(null);
-    },
-
     async GetPresencesForCourse(
         call: grpc.ServerUnaryCall<PresencesForCourseReq, PresencesForCourseRes>,
         callback: grpc.sendUnaryData<PresencesForCourseRes>
@@ -357,6 +283,80 @@ export const courseHandlers: CourseServiceHandlers = {
         });
 
         callback(null, { teachers: result });
+    },
+
+    async AddStudentToCourse(
+        call: grpc.ServerUnaryCall<StudentToCourseReq, StudentToCourseRes>,
+        callback: grpc.sendUnaryData<StudentToCourseRes>
+    ) {
+        const teacher = await ensureAdmin(call, callback);
+        if (!teacher) return;
+
+        const manager = getManager();
+
+        const { courseId, studentId } = call.request;
+        const course = await manager.findOne(Course, {
+            where: { id: courseId },
+            relations: ["students"]
+        });
+        const student = await manager.findOne(Student, {
+            where: { id: studentId }
+        });
+
+        if (!course || !student) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: "Invalid student or course specified."
+            });
+        }
+
+        if (course.students.find(s => s.id === student.id)) {
+            callback({
+                code: grpc.status.INTERNAL,
+                message: "Student is already enrolled in that course."
+            });
+        }
+
+        course.students.push(student);
+        course.save();
+
+        callback(null);
+    },
+
+    async RemoveStudentFromCourse(
+        call: grpc.ServerUnaryCall<StudentToCourseReq, StudentToCourseRes>,
+        callback: grpc.sendUnaryData<StudentToCourseRes>
+    ) {
+        const teacher = await ensureAdmin(call, callback);
+        if (!teacher) return;
+        
+        const manager = getManager();
+
+        const { courseId, studentId } = call.request;
+        const course = await manager.findOne(Course, {
+            where: { id: courseId },
+            relations: ["students"]
+        });
+
+        if (!course) {
+            callback({
+                code: grpc.status.NOT_FOUND,
+                message: "Invalid course specified."
+            });
+        }
+
+        const index = course.students.findIndex(s => s.id === studentId);
+        if (index === -1) {
+            callback({
+                code: grpc.status.INTERNAL,
+                message: "Student is not enrolled in that course."
+            });
+        }
+
+        course.students.splice(index, 1);
+        course.save();        
+
+        callback(null);
     },
 
     async GetTeachersForCourse(
