@@ -24,5 +24,5 @@ Steps to run this project, after cloning:
 3. Run one of the several scripts:
     - `yarn run server`: starts the proxy and the server
     - `yarn run server stop`: attempts to automatically find and stop the docker container that's running the proxy. This can be called after having stopped the server, if one wants to avoid having to manually find and stop the docker container
-    - `yarn run createUser`: script that allows the creation of user accounts on the system. Useful for creating an initial administrator account to get initial access and set up the system
+    - `yarn run createUser`: script that allows the creation of user accounts on the system. Useful for creating an administrator account to get initial access and set up the system
     - `yarn run populate`: script that creates students, teachers, and courses, useful for quickly populating the database with junk data for demonstration purposes

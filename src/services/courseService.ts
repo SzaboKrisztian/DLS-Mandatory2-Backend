@@ -260,7 +260,7 @@ export const courseHandlers: CourseServiceHandlers = {
 
         const manager = getManager();
         const teachers = await manager.find(Teacher, {
-            relations: ["courses"]
+            relations: ["account", "courses"]
         });
 
         const result = teachers.map(t => {
