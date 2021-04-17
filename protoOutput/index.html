@@ -420,6 +420,14 @@
                 </li>
               
                 <li>
+                  <a href="#rollCallService.RealTimePresences"><span class="badge">M</span>RealTimePresences</a>
+                </li>
+              
+                <li>
+                  <a href="#rollCallService.RealTimePresences.StudentEntry"><span class="badge">M</span>RealTimePresences.StudentEntry</a>
+                </li>
+              
+                <li>
                   <a href="#rollCallService.ReattachReq"><span class="badge">M</span>ReattachReq</a>
                 </li>
               
@@ -1907,6 +1915,82 @@
 
         
       
+        <h3 id="rollCallService.RealTimePresences">RealTimePresences</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>students</td>
+                  <td><a href="#rollCallService.RealTimePresences.StudentEntry">RealTimePresences.StudentEntry</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>marked</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="rollCallService.RealTimePresences.StudentEntry">RealTimePresences.StudentEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>firstName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>present</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
         <h3 id="rollCallService.ReattachReq">ReattachReq</h3>
         <p></p>
 
@@ -2084,6 +2168,20 @@
                 <td>MarkAsPresent</td>
                 <td><a href="#rollCallService.MarkAsPresentReq">MarkAsPresentReq</a></td>
                 <td><a href="#rollCallService.MarkAsPresentRes">MarkAsPresentRes</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GetRealTimePresences</td>
+                <td><a href="#rollCallService.ReattachReq">ReattachReq</a></td>
+                <td><a href="#rollCallService.RealTimePresences">RealTimePresences</a> stream</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ListActiveRollCalls</td>
+                <td><a href="#rollCallService.ListRollCallsReq">ListRollCallsReq</a></td>
+                <td><a href="#rollCallService.ListRollCallsRes">ListRollCallsRes</a></td>
                 <td><p></p></td>
               </tr>
             

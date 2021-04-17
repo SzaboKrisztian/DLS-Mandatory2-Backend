@@ -28,6 +28,8 @@ import { MarkAsPresentReq }
     from "../../protoOutput/ts/rollCallService/MarkAsPresentReq";
 import { MarkAsPresentRes }
     from "../../protoOutput/ts/rollCallService/MarkAsPresentRes";
+import { RealTimePresences }
+    from "../../protoOutput/ts/rollCallService/RealTimePresences";
 
 import { getManager } from "typeorm";
 import {
@@ -50,6 +52,8 @@ interface RollCallEntry {
     codes: string[],
     interval: NodeJS.Timer | null,
     call: grpc.ServerWritableStream<StartRollCallReq, RpcCode> | grpc.ServerWritableStream<ReattachReq, RpcCode>,
+    presenceStreams: grpc.ServerWritableStream<ReattachReq, RealTimePresences>[],
+    emitPresence: (studentId: number) => void,
     end: () => void
 }
 
@@ -89,6 +93,21 @@ function printActiveRollCalls() {
 
 function rcToObj(rc: RollCall) {
     return { id: rc.id, courseId: rc.course.id }
+}
+
+function getStatus(rc: RollCall) {
+    if (!rollCalls[rc.id]) {
+        return [];
+    }
+
+    return rc.course.students.map(
+        s => ({
+            id: s.id,
+            firstName: s.firstName,
+            lastName: s.lastName,
+            present: rollCalls[rc.id].presences[s.id]
+        })
+    )
 }
 
 export const rollCallHandlers: RollCallServiceHandlers = {
@@ -162,10 +181,19 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             presences: {},
             courseId: course.id,
             call,
+            presenceStreams: [],
+            emitPresence(studentId) {
+                rollCalls[rollCall.id].presenceStreams = rollCalls[rollCall.id]
+                    .presenceStreams.filter(c => !c.cancelled);
+                rollCalls[rollCall.id].presenceStreams.forEach(c => {
+                    c.write({ marked: studentId });
+                });
+            },
             interval,
             codes: [],
             startedBy: teacher,
-            end: () => {
+            end() {
+                rollCalls[rollCall.id].presenceStreams.forEach(c => c.end());
                 call.end();
                 clearInterval(interval);
                 delete rollCalls[rollCall.id];
@@ -281,10 +309,23 @@ export const rollCallHandlers: RollCallServiceHandlers = {
             presences: {},
             courseId: rollCall.course.id,
             call,
+            presenceStreams: [],
+            emitPresence(studentId) {
+                rollCalls[rollCall.id].presenceStreams = rollCalls[rollCall.id]
+                    .presenceStreams.filter(c => !c.cancelled);
+                rollCalls[rollCall.id].presenceStreams.forEach(c => {
+                    c.write({ marked: studentId });
+                });
+            },
             interval,
             codes: [],
             startedBy: author,
-            end: () => {
+            end() {
+                const status = getStatus(rollCall);
+                rollCalls[rollCall.id].presenceStreams.forEach(c => {
+                    c.write({ students: status });
+                    c.end();
+                });
                 call.end();
                 clearInterval(interval);
                 delete rollCalls[rollCall.id];
@@ -455,6 +496,59 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         presence.save();
 
         callback(null);
+    },
+
+    async GetRealTimePresences(
+        call: grpc.ServerWritableStream<ReattachReq, RealTimePresences>
+    ) {
+        const teacher = await ensureTeacher(call);
+        if (!teacher) return;
+
+        const { rollCallId } = call.request;
+        const manager = getManager();
+
+        if (rollCalls[rollCallId] === undefined) {
+            call.destroy({
+                code: grpc.status.NOT_FOUND,
+                message: "No such roll call in progress."
+            } as any);
+            return;
+        }
+
+        const rollCall = rollCalls[rollCallId].rollCall;
+        if (!teacher.admin && !rollCall.course.teachers.find(
+            t => t.id === teacher.id
+        )) {
+            call.destroy({
+                code: grpc.status.PERMISSION_DENIED,
+                message: "Not permitted to follow this roll call."
+            } as any);
+            return;
+        }
+
+        call.write({ students: getStatus(rollCall) });
+        rollCalls[rollCallId].presenceStreams.push(call);
+    },
+
+    async ListActiveRollCalls(
+        call: grpc.ServerUnaryCall<ListRollCallsReq, ListRollCallsRes>,
+        callback: grpc.sendUnaryData<ListRollCallsRes>
+    ) {
+        const teacher = await ensureTeacher(call, callback);
+        if (!teacher) return;
+
+        const activeRollCalls = teacher.admin
+            ? Object.keys(rollCalls)
+                .map(k => ({
+                    id: rollCalls[k].rollCall.id,
+                    courseId: rollCalls[k].rollCall.course.id
+                }))
+            : Object.keys(rollCalls)
+                .map(k => rollCalls[k].rollCall)
+                .filter(rc => rc.course.teachers.find(t => t.id === teacher.id))
+                .map(rcToObj);
+
+        callback(null, { rollCalls: activeRollCalls });
     }
 }
 

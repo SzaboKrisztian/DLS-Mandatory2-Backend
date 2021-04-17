@@ -9,6 +9,8 @@ service RollCallService {
     rpc ListRollCalls(ListRollCallsReq) returns (ListRollCallsRes);
     rpc ReattachToRollCall(ReattachReq) returns (stream Code);
     rpc MarkAsPresent(MarkAsPresentReq) returns (MarkAsPresentRes);
+    rpc GetRealTimePresences(ReattachReq) returns (stream RealTimePresences);
+    rpc ListActiveRollCalls(ListRollCallsReq) returns (ListRollCallsRes);
 
     // Student procedures
     rpc ValidateCode(Code) returns (ValidateRes);
@@ -59,3 +61,13 @@ message MarkAsPresentReq {
 
 message MarkAsPresentRes {}
 
+message RealTimePresences {
+    message StudentEntry {
+        int32 id = 1;
+        string firstName = 2;
+        string lastName = 3;
+        bool present = 4;
+    }
+    repeated StudentEntry students = 1;
+    int32 marked = 2;
+}
