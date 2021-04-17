@@ -87,6 +87,10 @@ function printActiveRollCalls() {
     console.log("--------------------\n");
 }
 
+function rcToObj(rc: RollCall) {
+    return { id: rc.id, courseId: rc.course.id }
+}
+
 export const rollCallHandlers: RollCallServiceHandlers = {
     async StartRollCall(
         call: grpc.ServerWritableStream<StartRollCallReq, RpcCode>
@@ -321,9 +325,9 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         if (!teacher.admin) {
             const filteredRcs = rollCalls.filter(rc =>
                 rc.course.teachers.find(t => t.id === teacher.id) !== undefined);
-            callback(null, { rollCallIds: filteredRcs.map(rc => rc.id) });
+            callback(null, { rollCalls: filteredRcs.map(rcToObj) });
         } else {
-            callback(null, { rollCallIds: rollCalls.map(rc => rc.id) });
+            callback(null, { rollCalls: rollCalls.map(rcToObj) });
         }
     },
 

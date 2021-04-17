@@ -34,7 +34,12 @@ message EndRollCallRes {}
 message ListRollCallsReq {}
 
 message ListRollCallsRes {
-    repeated int32 rollCallIds = 1;
+    repeated RollCallEntry rollCalls = 1;
+}
+
+message RollCallEntry {
+    int32 id = 1;
+    int32 courseId = 2;
 }
 
 message ReattachReq {

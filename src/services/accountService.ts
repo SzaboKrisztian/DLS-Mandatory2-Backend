@@ -68,7 +68,7 @@ export const accountHandlers: AccountServiceHandlers = {
             });
             return;
         }
-        if (isEmailTaken(email)) {
+        if (await isEmailTaken(email)) {
             callback({
                 code: grpc.status.ALREADY_EXISTS,
                 message: "The email address is already in use."
@@ -179,7 +179,7 @@ export const accountHandlers: AccountServiceHandlers = {
             });
             return;
         }
-        if (isEmailTaken(email)) {
+        if (await isEmailTaken(email)) {
             callback({
                 code: grpc.status.ALREADY_EXISTS,
                 message: "The email address is already in use."

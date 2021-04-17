@@ -254,15 +254,6 @@ if (process.argv.length > 2) {
             }
             break;
 
-        case "test":
-            getAccountClient().UpdateStudent({
-                firstName: "test",
-                email: "more test",
-                lastName: undefined,
-                password: null
-            }, metadata, logErrAndRes);
-            break;
-
         default:
             console.error("Invalid action");
     }
