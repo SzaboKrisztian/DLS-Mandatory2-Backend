@@ -495,6 +495,10 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         presence.markedBy = teacher;
         presence.save();
 
+        if (rollCalls[rollCall.id]) {
+            rollCalls[rollCall.id].presences[studentId] = true;
+        }
+
         callback(null);
     },
 
@@ -505,7 +509,6 @@ export const rollCallHandlers: RollCallServiceHandlers = {
         if (!teacher) return;
 
         const { rollCallId } = call.request;
-        const manager = getManager();
 
         if (rollCalls[rollCallId] === undefined) {
             call.destroy({
