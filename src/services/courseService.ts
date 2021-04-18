@@ -115,9 +115,10 @@ export const courseHandlers: CourseServiceHandlers = {
         if (!student) return;
 
         const manager = getManager();
+        const { courseId } = call.request;
 
         const presences = await manager.find(Presence, {
-            where: { student },
+            where: { student, course: { id: courseId } },
             relations: ["rollCall"]
         });
 
@@ -307,6 +308,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Invalid student or course specified."
             });
+            return;
         }
 
         if (course.students.find(s => s.id === student.id)) {
@@ -314,6 +316,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.INTERNAL,
                 message: "Student is already enrolled in that course."
             });
+            return;
         }
 
         course.students.push(student);
@@ -342,6 +345,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Invalid course specified."
             });
+            return;
         }
 
         const index = course.students.findIndex(s => s.id === studentId);
@@ -350,6 +354,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.INTERNAL,
                 message: "Student is not enrolled in that course."
             });
+            return;
         }
 
         course.students.splice(index, 1);
@@ -377,6 +382,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Requested course not found."
             });
+            return;
         }
 
         const result = course.teachers.map(t => {
@@ -423,6 +429,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Invalid teacher or course specified."
             });
+            return;
         }
 
         if (course.teachers.find(t => t.id === teacher.id)) {
@@ -430,6 +437,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.INTERNAL,
                 message: "Teacher is already teaching in that course."
             });
+            return;
         }
 
         course.teachers.push(teacher);
@@ -458,14 +466,16 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Invalid course specified."
             });
+            return;
         }
 
-        const index = course.teachers.findIndex(t => t.id === teacher.id);
+        const index = course.teachers.findIndex(t => t.id === teacherId);
         if (index === -1) {
             callback({
                 code: grpc.status.INTERNAL,
                 message: "Teachers is not teaching that course."
             });
+            return;
         }
 
         course.teachers.splice(index, 1);
@@ -509,6 +519,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Invalid course specified."
             });
+            return;
         }
 
         course.name = name;
@@ -535,6 +546,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Invalid course specified."
             });
+            return;
         }
 
         await course.softRemove();

@@ -22,20 +22,8 @@ import { ResetPassRes } from
     "../../protoOutput/ts/accountService/ResetPassRes"
 
 import { getManager, getCustomRepository } from "typeorm";
-import {
-    Account,
-    Course,
-    RollCall,
-    Presence,
-    Student,
-    Teacher
-} from "../entity";
-import {
-    ensureAccount,
-    ensureStudent,
-    ensureTeacher,
-    ensureAdmin,
-} from "../utils";
+import { Account, Student, Teacher } from "../entity";
+import { ensureAdmin } from "../utils";
 import {
     AccountRepository,
     StudentRepository,
@@ -226,6 +214,7 @@ export const accountHandlers: AccountServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Teacher not found."
             });
+            return;
         }
 
         teacher.firstName = firstName ? firstName : teacher.firstName;
@@ -262,6 +251,7 @@ export const accountHandlers: AccountServiceHandlers = {
                 code: grpc.status.NOT_FOUND,
                 message: "Teacher not found."
             });
+            return;
         }
 
         try {
