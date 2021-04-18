@@ -226,6 +226,14 @@
             <ul>
               
                 <li>
+                  <a href="#authService.ChangePasswordReq"><span class="badge">M</span>ChangePasswordReq</a>
+                </li>
+              
+                <li>
+                  <a href="#authService.ChangePasswordRes"><span class="badge">M</span>ChangePasswordRes</a>
+                </li>
+              
+                <li>
                   <a href="#authService.GetUserRequest"><span class="badge">M</span>GetUserRequest</a>
                 </li>
               
@@ -789,6 +797,44 @@
       <p></p>
 
       
+        <h3 id="authService.ChangePasswordReq">ChangePasswordReq</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>oldPass</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>newPass</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+
+          
+
+        
+      
+        <h3 id="authService.ChangePasswordRes">ChangePasswordRes</h3>
+        <p></p>
+
+        
+
+        
+      
         <h3 id="authService.GetUserRequest">GetUserRequest</h3>
         <p></p>
 
@@ -980,6 +1026,13 @@
                 <td>GetUser</td>
                 <td><a href="#authService.GetUserRequest">GetUserRequest</a></td>
                 <td><a href="#authService.GetUserResponse">GetUserResponse</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ChangePassword</td>
+                <td><a href="#authService.ChangePasswordReq">ChangePasswordReq</a></td>
+                <td><a href="#authService.ChangePasswordRes">ChangePasswordRes</a></td>
                 <td><p></p></td>
               </tr>
             

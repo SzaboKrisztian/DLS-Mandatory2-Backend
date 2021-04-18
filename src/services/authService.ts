@@ -5,7 +5,7 @@ import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcrypt";
 
 import { getCustomRepository, getRepository } from "typeorm";
-import { AccountRepository } from "../repository/AccountRepository";
+import { AccountRepository, SALT_ROUNDS } from "../repository/AccountRepository";
 
 import { AuthServiceHandlers } from "../../protoOutput/ts/authService/AuthService";
 import { ProtoGrpcType as AuthServiceType } from "../../protoOutput/ts/authService";
@@ -13,6 +13,8 @@ import { LoginRequest } from "../../protoOutput/ts/authService/LoginRequest";
 import { LoginResponse } from "../../protoOutput/ts/authService/LoginResponse";
 import { LogoutResponse } from "../../protoOutput/ts/authService/LogoutResponse";
 import { GetUserResponse } from "../../protoOutput/ts/authService/GetUserResponse";
+import { ChangePasswordReq } from "../../protoOutput/ts/authService/ChangePasswordReq";
+import { ChangePasswordRes } from "../../protoOutput/ts/authService/ChangePasswordRes";
 import { ensureAccount, getUserForAccount } from "../utils";
 import { AccessToken, Student, Teacher } from "../entity";
 
@@ -119,6 +121,25 @@ export const authHandlers: AuthServiceHandlers = {
             lastName: user.lastName,
             accountId: accId
         });
+    },
+    async ChangePassword(
+        call: grpc.ServerUnaryCall<ChangePasswordReq, ChangePasswordRes>,
+        callback: grpc.sendUnaryData<Empty>
+    ) {
+        const account = await ensureAccount(call, callback);
+
+        const { oldPass, newPass } = call.request;
+        const matches = await bcrypt.compare(oldPass, account.password);
+        if (matches) {
+            account.password = await bcrypt.hash(newPass, SALT_ROUNDS);
+            await account.save();
+            callback(null);
+        } else {
+            callback({
+                code: grpc.status.INVALID_ARGUMENT,
+                message: "Invalid password"
+            });
+        }
     }
 };
 

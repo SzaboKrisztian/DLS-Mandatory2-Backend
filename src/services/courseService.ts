@@ -122,7 +122,7 @@ export const courseHandlers: CourseServiceHandlers = {
                 student: { id: student.id },
                 courseId
             },
-            relations: ["student"]
+            relations: ["student", "rollCall"]
         });
 
         const result = presences.map(p => ({

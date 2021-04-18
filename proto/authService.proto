@@ -6,6 +6,7 @@ service AuthService {
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc Logout (LogoutRequest) returns (LogoutResponse) {}
     rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
+    rpc ChangePassword (ChangePasswordReq) returns (ChangePasswordRes) {}
 }
 
 message LoginRequest {
@@ -34,3 +35,10 @@ message GetUserResponse {
     string lastName = 5;
     int32 accountId = 6;
 }
+
+message ChangePasswordReq {
+    string oldPass = 1;
+    string newPass = 2;
+}
+
+message ChangePasswordRes {}

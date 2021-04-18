@@ -1,6 +1,8 @@
 // Original file: proto/authService.proto
 
 import type * as grpc from '@grpc/grpc-js'
+import type { ChangePasswordReq as _authService_ChangePasswordReq, ChangePasswordReq__Output as _authService_ChangePasswordReq__Output } from '../authService/ChangePasswordReq';
+import type { ChangePasswordRes as _authService_ChangePasswordRes, ChangePasswordRes__Output as _authService_ChangePasswordRes__Output } from '../authService/ChangePasswordRes';
 import type { GetUserRequest as _authService_GetUserRequest, GetUserRequest__Output as _authService_GetUserRequest__Output } from '../authService/GetUserRequest';
 import type { GetUserResponse as _authService_GetUserResponse, GetUserResponse__Output as _authService_GetUserResponse__Output } from '../authService/GetUserResponse';
 import type { LoginRequest as _authService_LoginRequest, LoginRequest__Output as _authService_LoginRequest__Output } from '../authService/LoginRequest';
@@ -9,6 +11,15 @@ import type { LogoutRequest as _authService_LogoutRequest, LogoutRequest__Output
 import type { LogoutResponse as _authService_LogoutResponse, LogoutResponse__Output as _authService_LogoutResponse__Output } from '../authService/LogoutResponse';
 
 export interface AuthServiceClient extends grpc.Client {
+  ChangePassword(argument: _authService_ChangePasswordReq, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  ChangePassword(argument: _authService_ChangePasswordReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  ChangePassword(argument: _authService_ChangePasswordReq, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  ChangePassword(argument: _authService_ChangePasswordReq, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  changePassword(argument: _authService_ChangePasswordReq, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  changePassword(argument: _authService_ChangePasswordReq, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  changePassword(argument: _authService_ChangePasswordReq, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  changePassword(argument: _authService_ChangePasswordReq, callback: (error?: grpc.ServiceError, result?: _authService_ChangePasswordRes__Output) => void): grpc.ClientUnaryCall;
+  
   GetUser(argument: _authService_GetUserRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _authService_GetUserResponse__Output) => void): grpc.ClientUnaryCall;
   GetUser(argument: _authService_GetUserRequest, metadata: grpc.Metadata, callback: (error?: grpc.ServiceError, result?: _authService_GetUserResponse__Output) => void): grpc.ClientUnaryCall;
   GetUser(argument: _authService_GetUserRequest, options: grpc.CallOptions, callback: (error?: grpc.ServiceError, result?: _authService_GetUserResponse__Output) => void): grpc.ClientUnaryCall;
@@ -39,6 +50,8 @@ export interface AuthServiceClient extends grpc.Client {
 }
 
 export interface AuthServiceHandlers extends grpc.UntypedServiceImplementation {
+  ChangePassword: grpc.handleUnaryCall<_authService_ChangePasswordReq__Output, _authService_ChangePasswordRes>;
+  
   GetUser: grpc.handleUnaryCall<_authService_GetUserRequest__Output, _authService_GetUserResponse>;
   
   Login: grpc.handleUnaryCall<_authService_LoginRequest__Output, _authService_LoginResponse>;

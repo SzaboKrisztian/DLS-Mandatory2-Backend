@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-const saltRounds = 10;
+export const SALT_ROUNDS = 10;
 
 import { EntityRepository, AbstractRepository } from "typeorm";
 import { Account } from "../entity/Account";
@@ -17,7 +17,7 @@ export class AccountRepository extends AbstractRepository<Account> {
         }
         const account = this.manager.create(Account, {
             email,
-            password: await bcrypt.hash(password, saltRounds)
+            password: await bcrypt.hash(password, SALT_ROUNDS)
         });
         return account.save();
     }
@@ -35,7 +35,7 @@ export class AccountRepository extends AbstractRepository<Account> {
         if (!account) {
             throw new Error("Account not found.");
         }
-        account.password = await bcrypt.hash(newPassword, saltRounds);
+        account.password = await bcrypt.hash(newPassword, SALT_ROUNDS);
         await account.save();
     }
 

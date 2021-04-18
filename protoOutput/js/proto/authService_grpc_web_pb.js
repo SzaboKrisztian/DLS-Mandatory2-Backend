@@ -310,5 +310,85 @@ proto.authService.AuthServicePromiseClient.prototype.getUser =
 };
 
 
+/**
+ * @const
+ * @type {!grpc.web.MethodDescriptor<
+ *   !proto.authService.ChangePasswordReq,
+ *   !proto.authService.ChangePasswordRes>}
+ */
+const methodDescriptor_AuthService_ChangePassword = new grpc.web.MethodDescriptor(
+  '/authService.AuthService/ChangePassword',
+  grpc.web.MethodType.UNARY,
+  proto.authService.ChangePasswordReq,
+  proto.authService.ChangePasswordRes,
+  /**
+   * @param {!proto.authService.ChangePasswordReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.authService.ChangePasswordRes.deserializeBinary
+);
+
+
+/**
+ * @const
+ * @type {!grpc.web.AbstractClientBase.MethodInfo<
+ *   !proto.authService.ChangePasswordReq,
+ *   !proto.authService.ChangePasswordRes>}
+ */
+const methodInfo_AuthService_ChangePassword = new grpc.web.AbstractClientBase.MethodInfo(
+  proto.authService.ChangePasswordRes,
+  /**
+   * @param {!proto.authService.ChangePasswordReq} request
+   * @return {!Uint8Array}
+   */
+  function(request) {
+    return request.serializeBinary();
+  },
+  proto.authService.ChangePasswordRes.deserializeBinary
+);
+
+
+/**
+ * @param {!proto.authService.ChangePasswordReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @param {function(?grpc.web.Error, ?proto.authService.ChangePasswordRes)}
+ *     callback The callback function(error, response)
+ * @return {!grpc.web.ClientReadableStream<!proto.authService.ChangePasswordRes>|undefined}
+ *     The XHR Node Readable Stream
+ */
+proto.authService.AuthServiceClient.prototype.changePassword =
+    function(request, metadata, callback) {
+  return this.client_.rpcCall(this.hostname_ +
+      '/authService.AuthService/ChangePassword',
+      request,
+      metadata || {},
+      methodDescriptor_AuthService_ChangePassword,
+      callback);
+};
+
+
+/**
+ * @param {!proto.authService.ChangePasswordReq} request The
+ *     request proto
+ * @param {?Object<string, string>} metadata User defined
+ *     call metadata
+ * @return {!Promise<!proto.authService.ChangePasswordRes>}
+ *     Promise that resolves to the response
+ */
+proto.authService.AuthServicePromiseClient.prototype.changePassword =
+    function(request, metadata) {
+  return this.client_.unaryCall(this.hostname_ +
+      '/authService.AuthService/ChangePassword',
+      request,
+      metadata || {},
+      methodDescriptor_AuthService_ChangePassword);
+};
+
+
 module.exports = proto.authService;
 
