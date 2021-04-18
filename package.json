@@ -31,7 +31,8 @@
       "typescript": "^4.2.4"
    },
    "scripts": {
-      "server": "./start.sh",
+      "start": "./start.sh",
+      "server": "ts-node src/index.ts",
       "client": "ts-node demo-client/index.ts",
       "createUser": "ts-node src/scripts/createUser.ts",
       "populate": "ts-node src/scripts/populateDb.ts"

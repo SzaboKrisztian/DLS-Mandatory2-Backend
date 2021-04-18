@@ -6,7 +6,7 @@ container=$(
     docker ps --filter ancestor=mandatory2-envoy-proxy --format="{{.ID}}"
 )
 
-if [[ "$COMMAND" == "stop" ]]
+if [[ "$COMMAND" == "stop-proxy" ]]
 then
     printf 'Attempting to automatically stop container:\n'
     if [ -z "$container" ]
@@ -19,7 +19,7 @@ then
     fi
 else
     printf "This script can be used with a stop argument as follows:
-    \"yarn run server stop\"
+    \"yarn run start stop-proxy\"
     To try to automatically stop the docker container if running.\n\n"
     
     if [ -z "$container" ]
