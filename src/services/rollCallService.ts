@@ -491,6 +491,7 @@ export const rollCallHandlers: RollCallServiceHandlers = {
 
         const presence = manager.create(Presence);
         presence.rollCall = rollCall;
+        presence.courseId = rollCall.course.id;
         presence.student = student;
         presence.markedBy = teacher;
         presence.save();

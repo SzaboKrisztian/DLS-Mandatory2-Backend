@@ -57,7 +57,7 @@ import { DeleteCourseReq } from
 import { DeleteCourseRes } from
     "../../protoOutput/ts/courseService/DeleteCourseRes";
 
-import { getManager } from "typeorm";
+import { getManager, getRepository } from "typeorm";
 import {
     Course,
     RollCall,
@@ -119,10 +119,10 @@ export const courseHandlers: CourseServiceHandlers = {
 
         const presences = await manager.find(Presence, {
             where: {
-                student,
-                rollCall: { course: { id: courseId } }
+                student: { id: student.id },
+                courseId
             },
-            relations: ["rollCall", "rollCall.course"]
+            relations: ["student"]
         });
 
         const result = presences.map(p => ({
