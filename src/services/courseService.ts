@@ -118,8 +118,11 @@ export const courseHandlers: CourseServiceHandlers = {
         const { courseId } = call.request;
 
         const presences = await manager.find(Presence, {
-            where: { student, course: { id: courseId } },
-            relations: ["rollCall"]
+            where: {
+                student,
+                rollCall: { course: { id: courseId } }
+            },
+            relations: ["rollCall", "rollCall.course"]
         });
 
         const result = presences.map(p => ({
