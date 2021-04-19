@@ -6,7 +6,7 @@ import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCall
 import { ProtoGrpcType as CourseServiceType } from "../protoOutput/ts/courseService";
 import { ProtoGrpcType as AccountServiceType } from "../protoOutput/ts/accountService";
 
-const SERVER_HOST = "172.105.247.223:50051";
+const SERVER_HOST = "localhost:50051";
 
 function getAuthClient() {
     const authPkg = protoLoader.loadSync(__dirname
@@ -251,6 +251,65 @@ if (process.argv.length > 2) {
             } else {
                 getCourseClient().GetTeachersForCourse(
                     { courseId: cId }, metadata, logErrAndRes);
+            }
+            break;
+
+        case "createStudent":
+        case "createTeacher":
+            if (process.argv.length < 7) {
+                console.error("Not enough arguemnts supplied");
+                console.error(`yarn run client ${action} <firstName> <lastName> <email> <password>`);
+                process.exit(1);
+            }
+
+            const createFirstName = process.argv[3];
+            const createLastName = process.argv[4];
+            const createEmail = process.argv[5];
+            const createPass = process.argv[6];
+
+            console.log(createFirstName, createLastName, createEmail, createPass);
+
+            if (action === "createStudent") {
+                getAccountClient().CreateStudent({
+                    firstName: createFirstName,
+                    lastName: createLastName,
+                    email: createEmail,
+                    password: createPass
+                }, metadata, logErrAndRes);
+            } else {
+                getAccountClient().CreateTeacher({
+                    firstName: createFirstName,
+                    lastName: createLastName,
+                    email: createEmail,
+                    password: createPass
+                }, metadata, logErrAndRes);
+            }
+            break;
+
+        case "updateStudent":
+        case "updateTeacher":
+            if (process.argv.length < 7) {
+                console.error("Not enough arguemnts supplied");
+                console.error(`yarn run client ${action} <id> <firstName> <lastName> <email>`);
+                process.exit(1);
+            }
+
+            const updateId = parseInt(process.argv[3], 10);
+            if (Number.isNaN(updateId)) {
+                console.error("Id must be an integer");
+                process.exit(1);
+            }
+            const updateFirstName = process.argv[4];
+            const updateLastName = process.argv[5];
+            const updateEmail = process.argv[6];
+
+            if (action === "updateStudent") {
+                getAccountClient().UpdateStudent({
+                    id: updateId,
+                    firstName: updateFirstName,
+                    lastName: updateLastName,
+                    email: updateEmail
+                }, metadata, logErrAndRes)
             }
             break;
 

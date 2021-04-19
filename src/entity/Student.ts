@@ -24,7 +24,7 @@ export class Student extends BaseEntity {
     @Column()
     lastName: string;
 
-    @OneToOne(() => Account)
+    @OneToOne(() => Account, { cascade: true })
     @JoinColumn()
     account: Account;
 

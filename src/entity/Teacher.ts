@@ -26,7 +26,7 @@ export class Teacher extends BaseEntity {
     @Column()
     admin: boolean;
 
-    @OneToOne(() => Account)
+    @OneToOne(() => Account, { cascade: true })
     @JoinColumn()
     account: Account;
 

@@ -95,7 +95,7 @@ export const accountHandlers: AccountServiceHandlers = {
         const manager = getManager();
         const student = await manager.findOne(Student, {
             where: { id },
-            relations: ["account"]
+            relations: ["account", "courses"]
         });
 
         if (!student) {
@@ -206,7 +206,7 @@ export const accountHandlers: AccountServiceHandlers = {
         const manager = getManager();
         const teacher = await manager.findOne(Teacher, {
             where: { id },
-            relations: ["account"]
+            relations: ["account", "courses"]
         });
 
         if (!teacher) {
