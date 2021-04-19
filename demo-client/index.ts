@@ -310,6 +310,13 @@ if (process.argv.length > 2) {
                     lastName: updateLastName,
                     email: updateEmail
                 }, metadata, logErrAndRes)
+            } else {
+                getAccountClient().UpdateTeacher({
+                    id: updateId,
+                    firstName: updateFirstName,
+                    lastName: updateLastName,
+                    email: updateEmail
+                }, metadata, logErrAndRes)
             }
             break;
 
