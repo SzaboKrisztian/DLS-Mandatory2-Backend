@@ -33,7 +33,7 @@
    "scripts": {
       "start": "./start.sh",
       "server": "ts-node src/index.ts",
-      "proxy": "envoy -c proxy/envoy.yaml",
+      "proxy": "envoy -c envoy.yaml",
       "client": "ts-node demo-client/index.ts",
       "createUser": "ts-node src/scripts/createUser.ts",
       "populate": "ts-node src/scripts/populateDb.ts"
