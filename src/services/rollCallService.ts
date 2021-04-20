@@ -435,10 +435,13 @@ export const rollCallHandlers: RollCallServiceHandlers = {
                     delete codeSubmissions[rollCallId][student.id];
                     const presence = manager.create(Presence);
                     presence.rollCall = rollCall;
-                    presence.courseId = rollCall[rollCallId].rollCall.course.id;
+                    presence.courseId = rollCall.course.id;
                     presence.student = student;
                     presence.markedBy = rollCalls[rollCallId].startedBy;
                     presence.save();
+                    rollCalls[rollCallId].presenceStreams.forEach(call => {
+                        call.write({ marked: student.id });
+                    });
                 }
             } else {
                 myCodes.splice(0, myCodes.length);
@@ -499,6 +502,9 @@ export const rollCallHandlers: RollCallServiceHandlers = {
 
         if (rollCalls[rollCall.id]) {
             rollCalls[rollCall.id].presences[studentId] = true;
+            rollCalls[rollCall.id].presenceStreams.forEach(call => {
+                call.write({ marked: student.id });
+            });
         }
 
         callback(null);
