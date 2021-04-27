@@ -23,6 +23,7 @@ Steps to run this project, after cloning:
 
 3. Run one of the several scripts:
     - `yarn run server`: start the server only
+    - `yarn run proxy`: start the proxy only - uses the system's envoy installation with the `envoy.yaml` configuration file found in the project's root. This is the recommended method, but you need to figure out installing envoy on your system
     - `yarn run start`: starts the proxy and the server
     - `yarn run start stop-proxy`: attempts to automatically find and stop the docker container that's running the proxy. This can be called after having stopped the server, if one wants to avoid having to manually find and stop the docker container
     - `yarn run createUser`: script that allows the creation of user accounts on the system. Useful for creating an administrator account to get initial access and set up the system
