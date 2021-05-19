@@ -1,6 +1,7 @@
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
+import { MoreThan, LessThan } from "typeorm";
 
 import { CourseServiceHandlers } from
     "../../protoOutput/ts/courseService/CourseService";
@@ -128,7 +129,9 @@ export const courseHandlers: CourseServiceHandlers = {
         const result = presences.map(p => ({
             id: p.id,
             rollCallId: p.rollCall.id,
-            timestamp: p.createdAt.toISOString()
+            timestamp: p.createdAt.toISOString(),
+            periodStart: p.rollCall.periodStart.toISOString(),
+            periodEnd: p.rollCall.periodEnd.toISOString()
         }));
 
         callback(null, { presences: result });
@@ -220,24 +223,29 @@ export const courseHandlers: CourseServiceHandlers = {
         
         const manager = getManager();
 
-        const { courseId } = call.request;
+        const { courseId, fromDate, untilDate } = call.request;
         const rollCalls = await manager.find(RollCall, {
-            where: { course: { id: courseId } },
+            where: {
+                course: { id: courseId },
+                periodStart: MoreThan(fromDate),
+                periodEnd: LessThan(untilDate)
+            },
             relations: ["presences", "presences.student", "presences.markedBy"]
         });
 
-        let result = [];
-        rollCalls.forEach(rc => {
-            result = result.concat(rc.presences.map(p => ({
+        let result = rollCalls.map(rc => ({
+            id: rc.id,
+            periodStart: rc.periodStart.toISOString(),
+            periodEnd: rc.periodEnd.toISOString(),
+            presences: rc.presences.map(p => ({
                 id: p.id,
-                rollCallId: rc.id,
                 timestamp: p.createdAt.toISOString(),
                 studentId: p.student.id,
                 teacherId: p.markedBy.id
-            })));
-        });
+            }))
+        }));
 
-        callback(null, { presences: result });
+        callback(null, { rollCalls: result });
     },
 
     // Admin procedures

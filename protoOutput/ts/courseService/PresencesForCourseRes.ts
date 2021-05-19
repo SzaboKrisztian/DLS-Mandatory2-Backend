@@ -1,11 +1,38 @@
 // Original file: proto/courseService.proto
 
-import type { Presence as _courseService_Presence, Presence__Output as _courseService_Presence__Output } from '../courseService/Presence';
+
+export interface _courseService_PresencesForCourseRes_RollCall_Presence {
+  'id'?: (number);
+  'timestamp'?: (string);
+  'studentId'?: (number);
+  'teacherId'?: (number);
+}
+
+export interface _courseService_PresencesForCourseRes_RollCall_Presence__Output {
+  'id': (number);
+  'timestamp': (string);
+  'studentId': (number);
+  'teacherId': (number);
+}
+
+export interface _courseService_PresencesForCourseRes_RollCall {
+  'id'?: (number);
+  'periodStart'?: (string);
+  'periodEnd'?: (string);
+  'presences'?: (_courseService_PresencesForCourseRes_RollCall_Presence)[];
+}
+
+export interface _courseService_PresencesForCourseRes_RollCall__Output {
+  'id': (number);
+  'periodStart': (string);
+  'periodEnd': (string);
+  'presences': (_courseService_PresencesForCourseRes_RollCall_Presence__Output)[];
+}
 
 export interface PresencesForCourseRes {
-  'presences'?: (_courseService_Presence)[];
+  'rollCalls'?: (_courseService_PresencesForCourseRes_RollCall)[];
 }
 
 export interface PresencesForCourseRes__Output {
-  'presences': (_courseService_Presence__Output)[];
+  'rollCalls': (_courseService_PresencesForCourseRes_RollCall__Output)[];
 }

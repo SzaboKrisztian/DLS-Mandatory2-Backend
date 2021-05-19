@@ -64,10 +64,24 @@ message StudentToCourseRes {}
 
 message PresencesForCourseReq {
     int32 courseId = 1;
+    string fromDate = 2;
+    string untilDate = 3;
 }
 
 message PresencesForCourseRes {
-    repeated Presence presences = 1;
+    message RollCall {
+        message Presence {
+            int32 id = 1;
+            string timestamp = 2;
+            int32 studentId = 3;
+            int32 teacherId = 4;
+        }
+        int32 id = 1;
+        string periodStart = 2;
+        string periodEnd = 3;
+        repeated Presence presences = 4;
+    }
+    repeated RollCall rollCalls = 1;
 }
 
 message AllCoursesReq {}
@@ -116,14 +130,8 @@ message MyPresence {
     int32 id = 1;
     int32 rollCallId = 2;
     string timestamp = 3;
-}
-
-message Presence {
-    int32 id = 1;
-    int32 rollCallId = 2;
-    string timestamp = 3;
-    int32 studentId = 4;
-    int32 teacherId = 5;
+    string periodStart = 4;
+    string periodEnd = 5;
 }
 
 message Course {

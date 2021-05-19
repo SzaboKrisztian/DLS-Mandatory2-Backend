@@ -28,7 +28,6 @@ export interface ProtoGrpcType {
     MyPresencesReq: MessageTypeDefinition
     MyPresencesRes: MessageTypeDefinition
     Person: MessageTypeDefinition
-    Presence: MessageTypeDefinition
     PresencesForCourseReq: MessageTypeDefinition
     PresencesForCourseRes: MessageTypeDefinition
     RenameCourseReq: MessageTypeDefinition
