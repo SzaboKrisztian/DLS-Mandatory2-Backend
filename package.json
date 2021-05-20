@@ -36,6 +36,7 @@
       "proxy": "envoy -c envoy.yaml",
       "client": "ts-node demo-client/index.ts",
       "createUser": "ts-node src/scripts/createUser.ts",
-      "populate": "ts-node src/scripts/populateDb.ts"
+      "populate": "ts-node src/scripts/populateDb.ts",
+      "presences": "ts-node src/scripts/addPresences.ts"
    }
 }
