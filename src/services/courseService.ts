@@ -1,7 +1,7 @@
 import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
-import { MoreThan, LessThan } from "typeorm";
+import { MoreThanOrEqual, LessThanOrEqual } from "typeorm";
 
 import { CourseServiceHandlers } from
     "../../protoOutput/ts/courseService/CourseService";
@@ -227,8 +227,8 @@ export const courseHandlers: CourseServiceHandlers = {
         const rollCalls = await manager.find(RollCall, {
             where: {
                 course: { id: courseId },
-                periodStart: MoreThan(fromDate),
-                periodEnd: LessThan(untilDate)
+                periodStart: MoreThanOrEqual(fromDate),
+                periodEnd: LessThanOrEqual(untilDate)
             },
             relations: ["presences", "presences.student", "presences.markedBy"]
         });

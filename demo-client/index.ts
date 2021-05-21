@@ -309,15 +309,35 @@ if (process.argv.length > 2) {
                     firstName: updateFirstName,
                     lastName: updateLastName,
                     email: updateEmail
-                }, metadata, logErrAndRes)
+                }, metadata, logErrAndRes);
             } else {
                 getAccountClient().UpdateTeacher({
                     id: updateId,
                     firstName: updateFirstName,
                     lastName: updateLastName,
                     email: updateEmail
-                }, metadata, logErrAndRes)
+                }, metadata, logErrAndRes);
             }
+            break;
+
+        case "presences":
+            if (process.argv.length < 4) {
+                console.error("Not enough arguemnts supplied");
+                console.error(`yarn run client ${action} <courseId>`);
+                process.exit(1);
+            }
+
+            const crsId = parseInt(process.argv[3], 10);
+            if (Number.isNaN(crsId)) {
+                console.error("Invalid courseId provided.");
+                process.exit(1);
+            }
+            
+            getCourseClient().getPresencesForCourse({
+                courseId: crsId,
+                fromDate: (new Date("2021-01-01")).toISOString(),
+                untilDate:  (new Date()).toISOString()
+            }, metadata, logErrAndRes);
             break;
 
         default:
