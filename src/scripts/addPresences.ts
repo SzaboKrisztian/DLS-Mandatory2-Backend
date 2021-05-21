@@ -4,8 +4,17 @@ import * as dateFns from "date-fns";
 import { randInt } from "./";
 import { Course, Presence, RollCall } from "../entity";
 
+function printUsage() {
+    console.log(`yarn run presences <courseId> <startDate> [endDate]
+    courseId - the course which should be populated with presences. Not that it requires associated students and teacher(s)
+    startDate - must be in the past
+    endDate - optional (default: new Date(), aka today) - must be in the past, must be after startDate.`);
+}
+
 if (process.argv.length < 4) {
-    throw new Error("Not enough arguments supplied");
+    console.log("Not enough arguments supplied.");
+    printUsage();
+    process.exit(1);
 }
 
 const today = getDate(new Date());
@@ -14,7 +23,9 @@ const startDate = getDate(new Date(process.argv[3]));
 const endDate = process.argv.length >= 5 ? getDate(new Date(process.argv[4])) : today;
 
 if (Number.isNaN(courseId) || dateFns.isBefore(endDate, startDate)) {
-    throw new Error("Invalid input");
+    console.log("Invalid argument(s) supplied.");
+    printUsage();
+    process.exit(1);
 }
 
 const SEGMENT_DURATION = 90; // minutes
@@ -75,6 +86,10 @@ async function addPresences(
         throw new Error("Both start and end dates should be in the past");
     }
 
+    if (process.argv.length >= 5 && dateFns.isBefore(endDate, startDate)) {
+        throw new Error("endDate must be after startDate.");
+    }
+
     const schedule = generateSchedule();
     let date = startDate;
     while (dateFns.isBefore(date, endDate)) {
@@ -108,5 +123,9 @@ async function addPresences(
 if (require.main === module) {
     addPresences()
         .then(() => console.log("Successfully created presences."))
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.error(err);
+            printUsage();
+            process.exit(1);
+        });
 }
