@@ -6,7 +6,7 @@ import { ProtoGrpcType as RollCallServiceType } from "../protoOutput/ts/rollCall
 import { ProtoGrpcType as CourseServiceType } from "../protoOutput/ts/courseService";
 import { ProtoGrpcType as AccountServiceType } from "../protoOutput/ts/accountService";
 
-const SERVER_HOST = "localhost:50051";
+const SERVER_HOST = "172.105.247.223:50051";
 
 function getAuthClient() {
     const authPkg = protoLoader.loadSync(__dirname

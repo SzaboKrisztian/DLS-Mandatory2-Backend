@@ -2,7 +2,7 @@ import * as grpc from "@grpc/grpc-js";
 import * as protoLoader from "@grpc/proto-loader";
 import { Empty } from "google-protobuf/google/protobuf/empty_pb";
 import * as jwt from "jsonwebtoken";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcrypt-nodejs-as-promised";
 
 import { getCustomRepository, getRepository } from "typeorm";
 import { AccountRepository, SALT_ROUNDS } from "../repository/AccountRepository";
